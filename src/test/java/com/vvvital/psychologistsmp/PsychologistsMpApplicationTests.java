@@ -1,10 +1,10 @@
-package com.vvvital.psycholostsmp;
+package com.vvvital.psychologistsmp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PsycholostsMpApplicationTests {
+class PsychologistsMpApplicationTests {
 
 	@Test
 	void contextLoads() {

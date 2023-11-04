@@ -1,2 +1,5 @@
-package com.vvvital.psychologistsmp.model;public class Location {
+package com.vvvital.psychologistsmp.model;
+
+public enum Location {
+
 }

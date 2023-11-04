@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.vvvital</groupId>
-	<artifactId>PsycholostsMP</artifactId>
+	<artifactId>PsychologistsMP</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>PsycholostsMP</name>
 	<description>PsycholostsMP</description>
