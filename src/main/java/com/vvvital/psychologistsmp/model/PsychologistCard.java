@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,5 +15,5 @@ public class PsychologistCard {
     private Integer experience;
     private String description;
     private String photoLink;
-    private Categories categories;
+    private Set<Categories> categories;
 }

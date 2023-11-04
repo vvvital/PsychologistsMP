@@ -7,4 +7,10 @@ CREATE TABLE if not exists users
     lastName  VARCHAR,
     role      VARCHAR   NOT NULL,
     location  VARCHAR
+);
+
+CREATE TABLE IF NOT EXISTS psychologistcard
+(
+
+
 )
