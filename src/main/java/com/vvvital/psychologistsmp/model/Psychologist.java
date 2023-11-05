@@ -1,7 +1,6 @@
 package com.vvvital.psychologistsmp.model;
 
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,12 +9,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Psychologist extends User{
+@Table(name = "users")
+public class Psychologist extends User {
 
-    private PsychologistCard psychologistCard;
+    private PsychologistCard card;
 
-    public Psychologist(String email, String password, String firstName, String lastName, Role role, Location location, PsychologistCard psychologistCard) {
+    public Psychologist(String email, String password, String firstName, String lastName, Role role, Location location, PsychologistCard card) {
         super(email, password, firstName, lastName, role, location);
-        this.psychologistCard = psychologistCard;
+        this.card = card;
     }
 }

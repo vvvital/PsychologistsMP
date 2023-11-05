@@ -26,14 +26,21 @@ public class RepositoryTest {
     }
 
     @Test
+    public void createClient(){
+        Client client=new Client("bohdan@email.ua","password","Bohdan","Hmelnytckyy"
+                , Role.CLIENT, Location.KYIV);
+        userRepository.save(client);
+    }
+
+    @Test
     public void createPsychologist(){
         Set<Categories> categories = Stream.of(Categories.PSYCHOLOGIST_SEXOLOGIST,Categories.CHILD_PSYCHOLOGIST
                 ,Categories.ORGANIZATIONAL_PSYCHOLOGIST).collect(Collectors.toSet());
 
         PsychologistCard psychologistCard=new PsychologistCard(1000,5,6
-                ,"description","photoLink",categories);
+                ,"description","photoLink");
         Psychologist psychologist=new Psychologist("ivan@email.ua","password","Ivan","Franko"
-                , Role.PSYCHOLOGIST, Location.LVIV, psychologistCard);
+                , Role.PSYCHOLOGIST, Location.LVIV,psychologistCard);
         userRepository.save(psychologist);
     }
 
