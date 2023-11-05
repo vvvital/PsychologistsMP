@@ -12,6 +12,9 @@ import lombok.Setter;
 @Table(name = "users")
 public class Psychologist extends User {
 
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "psychologistCard_id")
     private PsychologistCard card;
 
     public Psychologist(String email, String password, String firstName, String lastName, Role role, Location location, PsychologistCard card) {
