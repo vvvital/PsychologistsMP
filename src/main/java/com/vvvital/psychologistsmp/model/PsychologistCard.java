@@ -1,10 +1,7 @@
 package com.vvvital.psychologistsmp.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -19,7 +16,6 @@ public class PsychologistCard {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     private Long id;
-    //    private Long userId;
     @Column
     private Integer price;
     @Column
@@ -48,11 +44,4 @@ public class PsychologistCard {
     @OneToOne(mappedBy = "card", optional = false)
     private Psychologist card_id;
 
-    public Psychologist getCard_id() {
-        return card_id;
-    }
-
-    public void setCard_id(Psychologist card_id) {
-        this.card_id = card_id;
-    }
 }

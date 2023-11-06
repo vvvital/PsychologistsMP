@@ -22,36 +22,43 @@ public class RepositoryTest {
 
 
     @Test
-    public void create(){
-        User user = new User("lesia@email.ua","password","Lesia","Ukrainka"
+    public void create() {
+        User user = new User("lesia@email.ua", "password", "Lesia", "Ukrainka"
                 , Role.USER, Location.KYIV);
         userRepository.save(user);
     }
 
     @Test
-    public void createClient(){
-        Client client=new Client("bohdan@email.ua","password","Bohdan","Hmelnytckyy"
+    public void createClient() {
+        Client client = new Client("bohdan@email.ua", "password", "Bohdan", "Hmelnytckyy"
                 , Role.CLIENT, Location.KYIV);
         userRepository.save(client);
     }
 
     @Test
-    public void saveCard(){
-        PsychologistCard psychologistCard=new PsychologistCard(1000,5,6
-                ,"description","photoLink");
+    public void saveCard() {
+        PsychologistCard psychologistCard = new PsychologistCard(1000, 5, 6
+                , "description", "photoLink");
         cardRepository.save(psychologistCard);
     }
 
     @Test
-    public void createPsychologist(){
-        Set<Categories> categories = Stream.of(Categories.PSYCHOLOGIST_SEXOLOGIST,Categories.CHILD_PSYCHOLOGIST
-                ,Categories.ORGANIZATIONAL_PSYCHOLOGIST).collect(Collectors.toSet());
+    public void createPsychologist() {
+        Set<Categories> categories = Stream.of(Categories.PSYCHOLOGIST_SEXOLOGIST, Categories.CHILD_PSYCHOLOGIST
+                , Categories.ORGANIZATIONAL_PSYCHOLOGIST).collect(Collectors.toSet());
 
-        PsychologistCard psychologistCard=new PsychologistCard(1000,5,6
-                ,"description","photoLink");
-        Psychologist psychologist=new Psychologist("ivan@email.ua","password","Ivan","Franko"
-                , Role.PSYCHOLOGIST, Location.LVIV,psychologistCard);
+        PsychologistCard psychologistCard = new PsychologistCard(1000, 5, 6
+                , "description", "photoLink");
+        Psychologist psychologist = new Psychologist("ivan@email.ua", "password", "Ivan", "Franko"
+                , Role.PSYCHOLOGIST, Location.LVIV, psychologistCard);
         userRepository.save(psychologist);
+    }
+
+    @Test
+    public void getPsych() {
+        Psychologist psychologist = (Psychologist) userRepository.findByEmail("ivan@email.ua").orElse(null);
+        assert psychologist != null;
+        System.out.println(psychologist.toString());
     }
 
 }
