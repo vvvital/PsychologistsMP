@@ -3,11 +3,11 @@ package com.vvvital.psychologistsmp;
 import com.vvvital.psychologistsmp.model.*;
 import com.vvvital.psychologistsmp.repository.CardRepository;
 import com.vvvital.psychologistsmp.repository.UserRepository;
-import com.vvvital.psychologistsmp.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -58,7 +58,13 @@ public class RepositoryTest {
     public void getPsych() {
         Psychologist psychologist = (Psychologist) userRepository.findByEmail("ivan@email.ua").orElse(null);
         assert psychologist != null;
-        System.out.println(psychologist.toString());
+        System.out.println(psychologist);
+    }
+
+    @Test
+    public void getCard(){
+        List<PsychologistCard> cards=cardRepository.findAll();
+        cards.forEach(System.out::println);
     }
 
 }

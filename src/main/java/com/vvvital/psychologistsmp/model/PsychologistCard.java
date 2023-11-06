@@ -29,7 +29,6 @@ public class PsychologistCard {
 //    @Enumerated(EnumType.STRING)
 //    private Set<Categories> categories;
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
     private User user;
 
     public PsychologistCard(Integer price, Integer rating, Integer experience, String description, String photoLink) {
@@ -41,7 +40,15 @@ public class PsychologistCard {
 //        this.categories = categories;
     }
 
-    @OneToOne(mappedBy = "card", optional = false)
-    private Psychologist card_id;
-
+    @Override
+    public String toString() {
+        return "PsychologistCard{" +
+                "id=" + id +
+                ", price=" + price +
+                ", rating=" + rating +
+                ", experience=" + experience +
+                ", description='" + description + '\'' +
+                ", photoLink='" + photoLink + '\'' +
+                '}';
+    }
 }
