@@ -4,24 +4,24 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Table(name = "users")
 public class User {
     @Id
-    @SequenceGenerator(name = "id_seq", sequenceName = "users_id_seq",initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_seq")
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "id_seq")
+    @Column
     private Long id;
-
     private String email;
     private String password;
-    @Column(name = "firstname")
+    @Column
     private String firstName;
-    @Column(name = "lastname")
+    @Column
     private String lastName;
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -36,4 +36,5 @@ public class User {
         this.role = role;
         this.location = location;
     }
+
 }

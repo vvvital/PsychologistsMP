@@ -1,10 +1,7 @@
 package com.vvvital.psychologistsmp.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -16,27 +13,24 @@ import java.util.Set;
 @Table(name = "card")
 public class PsychologistCard {
     @Id
-    @SequenceGenerator(name = "id_seq", sequenceName = "card_id_seq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_seq")
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private Long id;
-    //    private Long userId;
-    @Column(name = "price")
+    @Column
     private Integer price;
-    @Column(name = "rating")
+    @Column
     private Integer rating;
-    @Column(name = "experience")
+    @Column
     private Integer experience;
-    @Column(name = "description")
+    @Column
     private String description;
-    @Column(name = "photoLink")
+    @Column
     private String photoLink;
 //    @Enumerated(EnumType.STRING)
 //    private Set<Categories> categories;
-
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Psychologist psychologist;
+    private User user;
 
     public PsychologistCard(Integer price, Integer rating, Integer experience, String description, String photoLink) {
         this.price = price;
@@ -46,4 +40,8 @@ public class PsychologistCard {
         this.photoLink = photoLink;
 //        this.categories = categories;
     }
+
+    @OneToOne(mappedBy = "card", optional = false)
+    private Psychologist card_id;
+
 }
