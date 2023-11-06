@@ -1,6 +1,7 @@
 package com.vvvital.psychologistsmp;
 
 import com.vvvital.psychologistsmp.model.*;
+import com.vvvital.psychologistsmp.repository.CardRepository;
 import com.vvvital.psychologistsmp.repository.UserRepository;
 import com.vvvital.psychologistsmp.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,8 @@ public class RepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CardRepository cardRepository;
 
 
     @Test
@@ -30,6 +33,13 @@ public class RepositoryTest {
         Client client=new Client("bohdan@email.ua","password","Bohdan","Hmelnytckyy"
                 , Role.CLIENT, Location.KYIV);
         userRepository.save(client);
+    }
+
+    @Test
+    public void saveCard(){
+        PsychologistCard psychologistCard=new PsychologistCard(1000,5,6
+                ,"description","photoLink");
+        cardRepository.save(psychologistCard);
     }
 
     @Test
