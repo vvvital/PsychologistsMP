@@ -76,4 +76,10 @@ public class RepositoryTest {
         cards.forEach(System.out::println);
     }
 
+    @Test
+    public void getAllUser(){
+        List<User> users=userRepository.findAll();
+        users.forEach(System.out::println);
+    }
+
 }

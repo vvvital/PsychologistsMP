@@ -29,8 +29,8 @@ public class PsychologistCard {
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Categories> categories;
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private User user;
+//    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+//    private User user;
 
     public PsychologistCard(Integer price, Integer rating, Integer experience, String description, String photoLink,Set<Categories> categories) {
         this.price = price;
