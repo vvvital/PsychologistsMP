@@ -26,18 +26,19 @@ public class PsychologistCard {
     private String description;
     @Column
     private String photoLink;
-//    @Enumerated(EnumType.STRING)
-//    private Set<Categories> categories;
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Categories> categories;
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private User user;
 
-    public PsychologistCard(Integer price, Integer rating, Integer experience, String description, String photoLink) {
+    public PsychologistCard(Integer price, Integer rating, Integer experience, String description, String photoLink,Set<Categories> categories) {
         this.price = price;
         this.rating = rating;
         this.experience = experience;
         this.description = description;
         this.photoLink = photoLink;
-//        this.categories = categories;
+        this.categories = categories;
     }
 
     @Override
@@ -49,6 +50,7 @@ public class PsychologistCard {
                 ", experience=" + experience +
                 ", description='" + description + '\'' +
                 ", photoLink='" + photoLink + '\'' +
+                ", categories " + categories.toString() +
                 '}';
     }
 }
