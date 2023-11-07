@@ -3,11 +3,11 @@ package com.vvvital.psychologistsmp;
 import com.vvvital.psychologistsmp.model.*;
 import com.vvvital.psychologistsmp.repository.CardRepository;
 import com.vvvital.psychologistsmp.repository.UserRepository;
-import com.vvvital.psychologistsmp.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,6 +20,11 @@ public class RepositoryTest {
     @Autowired
     private CardRepository cardRepository;
 
+    @Test
+    public void deleteAll(){
+        cardRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     public void create() {
@@ -37,8 +42,10 @@ public class RepositoryTest {
 
     @Test
     public void saveCard() {
+        Set<Categories> categories = Stream.of(Categories.PSYCHOLOGIST_SEXOLOGIST, Categories.CHILD_PSYCHOLOGIST
+                , Categories.ORGANIZATIONAL_PSYCHOLOGIST).collect(Collectors.toSet());
         PsychologistCard psychologistCard = new PsychologistCard(1000, 5, 6
-                , "description", "photoLink");
+                , "description", "photoLink",categories);
         cardRepository.save(psychologistCard);
     }
 
@@ -48,7 +55,7 @@ public class RepositoryTest {
                 , Categories.ORGANIZATIONAL_PSYCHOLOGIST).collect(Collectors.toSet());
 
         PsychologistCard psychologistCard = new PsychologistCard(1000, 5, 6
-                , "description", "photoLink");
+                , "description", "photoLink",categories);
         Psychologist psychologist = new Psychologist("ivan@email.ua", "password", "Ivan", "Franko"
                 , Role.PSYCHOLOGIST, Location.LVIV, psychologistCard);
         userRepository.save(psychologist);
@@ -58,7 +65,15 @@ public class RepositoryTest {
     public void getPsych() {
         Psychologist psychologist = (Psychologist) userRepository.findByEmail("ivan@email.ua").orElse(null);
         assert psychologist != null;
-        System.out.println(psychologist.toString());
+        System.out.println();
+        System.out.println(psychologist);
+        System.out.println();
+    }
+
+    @Test
+    public void getCard(){
+        List<PsychologistCard> cards=cardRepository.findAll();
+        cards.forEach(System.out::println);
     }
 
 }
