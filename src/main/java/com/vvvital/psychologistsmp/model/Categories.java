@@ -32,7 +32,7 @@ public enum Categories {
 
     PSYCHOLOGIST_CLOSE("Психологи поруч зі мною");
 
-    private String displayCategories;
+    private final String displayCategories;
 
     Categories(String displayCategories) {
         this.displayCategories = displayCategories;

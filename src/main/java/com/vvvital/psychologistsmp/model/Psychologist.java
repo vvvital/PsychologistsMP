@@ -40,6 +40,7 @@ public class Psychologist extends User {
                 ", experience=" + card.getExperience() +
                 ", description='" + card.getDescription() + '\'' +
                 ", photoLink='" + card.getPhotoLink() + '\'' +
+                ", categories " + card.getCategories().toString() +
                 '}';
     }
 }
