@@ -14,7 +14,7 @@ public interface UserDTOMapper {
 
     UserRequestDTO userToUserRequestDTO(User user);
 
-    User RequestDTOToUser(UserRequestDTO dto);
+    User requestDTOToUser(UserRequestDTO dto);
 
     List<UserResponseDTO> usersToUserResponseDTO(List<User> users);
 
