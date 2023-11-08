@@ -1,15 +1,13 @@
 package com.vvvital.psychologistsmp.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class Psychologist extends User {
 
@@ -22,27 +20,28 @@ public class Psychologist extends User {
         this.card = card;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + super.getId() +
-                ", email='" + super.getEmail() + '\'' +
-                ", password='" + super.getPassword() + '\'' +
-                ", firstName='" + super.getFirstName() + '\'' +
-                ", lastName='" + super.getLastName() + '\'' +
-                ", role=" + super.getRole() +
-                ", location=" + super.getLocation() +
-                '}'+ '\''+
-                "   PsychologistCard{" +
-                "id=" + card.getId() +
-                ", price=" + card.getPrice() +
-                ", rating=" + card.getRating() +
-                ", experience=" + card.getExperience() +
-                ", description='" + card.getDescription() + '\'' +
-                ", photoLink='" + card.getPhotoLink() + '\'' +
-                ", categories " + card.getCategories().toString() +
-                '}';
-    }
+//
+//
+//
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + super.getId() +
+//                ", email='" + super.getEmail() + '\'' +
+//                ", password='" + super.getPassword() + '\'' +
+//                ", firstName='" + super.getFirstName() + '\'' +
+//                ", lastName='" + super.getLastName() + '\'' +
+//                ", role=" + super.getRole() +
+//                ", location=" + super.getLocation() +
+//                '}'+ '\''+
+//                "   PsychologistCard{" +
+//                "id=" + card.getId() +
+//                ", price=" + card.getPrice() +
+//                ", rating=" + card.getRating() +
+//                ", experience=" + card.getExperience() +
+//                ", description='" + card.getDescription() + '\'' +
+//                ", photoLink='" + card.getPhotoLink() + '\'' +
+//                ", categories " + card.getCategories().toString() +
+//                '}';
+//    }
 }

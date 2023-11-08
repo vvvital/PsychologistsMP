@@ -7,6 +7,8 @@ import com.vvvital.psychologistsmp.model.User;
 import com.vvvital.psychologistsmp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,8 @@ import java.util.List;
 @RequestMapping("/api/users")
 @Tag(name = "User")
 public class UserController {
+
+    Logger logger= LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final UserDTOMapper userDTOMapper;
 
@@ -50,6 +54,7 @@ public class UserController {
     @GetMapping("/all")
     @Operation(summary = "Get all users")
     public ResponseEntity<List<UserResponseDTO>> findAllUsersResponseDTO() {
+        logger.info("************ users/all ************");
         List<UserResponseDTO> responseDTOs = userService.findAll();
         return ResponseEntity.ok(responseDTOs);
     }
