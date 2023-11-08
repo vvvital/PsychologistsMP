@@ -13,7 +13,7 @@ import lombok.ToString;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "id_seq")
     @Column
     private Long id;
     private String email;
