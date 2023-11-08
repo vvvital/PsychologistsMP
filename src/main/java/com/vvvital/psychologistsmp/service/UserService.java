@@ -4,16 +4,24 @@ import com.vvvital.psychologistsmp.dto.UserDTOMapper;
 import com.vvvital.psychologistsmp.dto.UserResponseDTO;
 import com.vvvital.psychologistsmp.model.User;
 import com.vvvital.psychologistsmp.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private UserDTOMapper userDTOMapper;
+    private final UserDTOMapper userDTOMapper;
+
+    @Autowired
+    public UserService(UserRepository userRepository, UserDTOMapper userDTOMapper) {
+        this.userRepository = userRepository;
+        this.userDTOMapper = userDTOMapper;
+    }
 
 
     public User save(User user) {
@@ -27,7 +35,10 @@ public class UserService {
 
 
     public List<UserResponseDTO> findAll() {
-        return null;
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(userDTOMapper::userToUserResponseDTO)
+                .collect(Collectors.toList());
     }
 
     public void delete(User user) {

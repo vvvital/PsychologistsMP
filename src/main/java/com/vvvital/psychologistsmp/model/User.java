@@ -9,7 +9,6 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
 @Table(name = "users")
 public class User {
@@ -37,4 +36,6 @@ public class User {
         this.location = location;
     }
 
+    public User() {
+    }
 }

@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +18,10 @@ import java.util.List;
 @RequestMapping("/api/users")
 @Tag(name = "User")
 public class UserController {
-
-    Logger logger= LoggerFactory.getLogger(UserController.class);
+    private final Logger logger= LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final UserDTOMapper userDTOMapper;
 
-    @Autowired
     public UserController(UserService userService, UserDTOMapper userDTOMapper) {
         this.userService = userService;
         this.userDTOMapper = userDTOMapper;
@@ -33,6 +30,7 @@ public class UserController {
     @PostMapping("/save")
     @Operation(summary = "Save user")
     public ResponseEntity<UserResponseDTO> save(@RequestBody UserRequestDTO userRequestDTO) {
+        logger.info("''''''''''''''''users/save''''''''''''''''''''''");
         User user = userDTOMapper.requestDTOToUser(userRequestDTO);
         User savedUser = userService.save(user);
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(savedUser);
@@ -54,7 +52,7 @@ public class UserController {
     @GetMapping("/all")
     @Operation(summary = "Get all users")
     public ResponseEntity<List<UserResponseDTO>> findAllUsersResponseDTO() {
-        logger.info("************ users/all ************");
+        logger.info("******************* users/all ****************");
         List<UserResponseDTO> responseDTOs = userService.findAll();
         return ResponseEntity.ok(responseDTOs);
     }
