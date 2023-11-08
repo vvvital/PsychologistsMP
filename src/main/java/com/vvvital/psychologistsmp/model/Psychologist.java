@@ -22,6 +22,8 @@ public class Psychologist extends User {
         this.card = card;
     }
 
+
+
     @Override
     public String toString() {
         return "User{" +
