@@ -1,7 +1,6 @@
 package com.vvvital.psychologistsmp.web;
 
 import com.vvvital.psychologistsmp.dto.UserDTOMapper;
-import com.vvvital.psychologistsmp.dto.UserRequestDTO;
 import com.vvvital.psychologistsmp.dto.UserResponseDTO;
 import com.vvvital.psychologistsmp.model.User;
 import com.vvvital.psychologistsmp.service.UserService;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 @Tag(name = "User")
 public class UserController {
-    private final Logger logger= LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final UserDTOMapper userDTOMapper;
 
@@ -29,17 +28,28 @@ public class UserController {
 
     @PostMapping("/save")
     @Operation(summary = "Save user")
-    public ResponseEntity<UserResponseDTO> save(@RequestBody UserRequestDTO userRequestDTO) {
-        logger.info("''''''''''''''''users/save''''''''''''''''''''''");
-        User user = userDTOMapper.requestDTOToUser(userRequestDTO);
-        User savedUser = userService.save(user);
-        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(savedUser);
+    public ResponseEntity<UserResponseDTO> save(@RequestBody User user) {
+        logger.info("''''''''''''''''users/save\n{}\n{}\n{}\n{}''''''''''''''''''''''", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName());
+//        User user = UserMapper.toModel(userRequestDTO);
+
+//        if (user.getRole() == Role.CLIENT) {
+//            Client client = (Client) user;
+//            saveUser = userService.save(client);
+//        } else if (user.getRole() == Role.PSYCHOLOGIST) {
+//            Psychologist psychologist = (Psychologist) user;
+//            saveUser = userService.save(psychologist);
+//        } else {
+//            saveUser = userService.save(user);
+//        }
+        User saveUser = userService.save(user);
+        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
         return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping("/email/{email}")
     @Operation(summary = "Get user by email")
     public ResponseEntity<UserResponseDTO> findByEmail(@PathVariable String email) {
+        logger.info("********* find by email {}", email);
         User user = userService.findByEmail(email);
         if (user != null) {
             UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(user);
