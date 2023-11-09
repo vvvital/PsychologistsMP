@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,6 +39,12 @@ public class RepositoryTest {
         Client client = new Client("bohdan@email.ua", "password", "Bohdan", "Hmelnytckyy"
                 , Role.CLIENT, Location.KYIV);
         userRepository.save(client);
+    }
+
+    @Test
+    public void getClient(){
+        Client client=(Client) userRepository.findByEmail("bohdan@email.ua").orElse(null);
+        System.out.println(client);
     }
 
     @Test
@@ -74,6 +81,18 @@ public class RepositoryTest {
     public void getCard(){
         List<PsychologistCard> cards=cardRepository.findAll();
         cards.forEach(System.out::println);
+    }
+
+    @Test
+    public void getAllUser(){
+        List<User> users=userRepository.findAll();
+        users.forEach(System.out::println);
+    }
+
+    @Test
+    public void getUserByEmail(){
+        User user=userRepository.findByEmail("lesia@email.ua").orElse(null);
+        System.out.println(user);
     }
 
 }
