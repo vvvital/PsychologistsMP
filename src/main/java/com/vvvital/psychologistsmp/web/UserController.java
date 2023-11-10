@@ -1,9 +1,6 @@
 package com.vvvital.psychologistsmp.web;
 
-import com.vvvital.psychologistsmp.dto.PsychologistCardDTO;
-import com.vvvital.psychologistsmp.dto.PsychologistMapper;
-import com.vvvital.psychologistsmp.dto.UserDTOMapper;
-import com.vvvital.psychologistsmp.dto.UserResponseDTO;
+import com.vvvital.psychologistsmp.dto.*;
 import com.vvvital.psychologistsmp.model.Psychologist;
 import com.vvvital.psychologistsmp.model.PsychologistCard;
 import com.vvvital.psychologistsmp.model.Role;
@@ -70,6 +67,12 @@ public class UserController {
         logger.info("******************* users/all ****************");
         List<UserResponseDTO> responseDTOs = userService.findAll();
         return ResponseEntity.ok(responseDTOs);
+    }
+
+    @GetMapping("/all/psychologist")
+    public ResponseEntity<List<PsychologistResponseDTO>>findAllPsychologist(){
+        logger.info("************* find All psychologists *************");
+        return ResponseEntity.ok(userService.findAllPsych());
     }
 
     @DeleteMapping("/delete")

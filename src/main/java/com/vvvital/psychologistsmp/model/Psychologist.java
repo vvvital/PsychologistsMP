@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
-@Setter
+//@Getter
+//@Setter
 //@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
@@ -26,7 +26,13 @@ public class Psychologist extends User {
         this.card=card;
     }
 
-//
+    public PsychologistCard getCard() {
+        return card;
+    }
+
+
+
+    //
 //
 //
 //    @Override
