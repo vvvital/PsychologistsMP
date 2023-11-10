@@ -6,7 +6,7 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
 public class Psychologist extends User {
@@ -18,6 +18,12 @@ public class Psychologist extends User {
     public Psychologist(String email, String password, String firstName, String lastName, Role role, Location location, PsychologistCard card) {
         super(email, password, firstName, lastName, role, location);
         this.card = card;
+    }
+
+    public Psychologist(){}
+
+    public void setCard(PsychologistCard card){
+        this.card=card;
     }
 
 //

@@ -1,11 +1,17 @@
 package com.vvvital.psychologistsmp.web;
 
+import com.vvvital.psychologistsmp.dto.PsychologistCardDTO;
+import com.vvvital.psychologistsmp.dto.PsychologistMapper;
 import com.vvvital.psychologistsmp.dto.UserDTOMapper;
 import com.vvvital.psychologistsmp.dto.UserResponseDTO;
+import com.vvvital.psychologistsmp.model.Psychologist;
+import com.vvvital.psychologistsmp.model.PsychologistCard;
+import com.vvvital.psychologistsmp.model.Role;
 import com.vvvital.psychologistsmp.model.User;
 import com.vvvital.psychologistsmp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +34,20 @@ public class UserController {
 
     @PostMapping("/save")
     @Operation(summary = "Save user")
-    public ResponseEntity<UserResponseDTO> save(@RequestBody User user) {
+    public ResponseEntity<UserResponseDTO> save(@RequestBody User user, PsychologistCardDTO card) {
         logger.info("''''''''''''''''users/save\n{}\n{}\n{}\n{}''''''''''''''''''''''", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName());
-//        User user = UserMapper.toModel(userRequestDTO);
-
-//        if (user.getRole() == Role.CLIENT) {
-//            Client client = (Client) user;
-//            saveUser = userService.save(client);
-//        } else if (user.getRole() == Role.PSYCHOLOGIST) {
-//            Psychologist psychologist = (Psychologist) user;
-//            saveUser = userService.save(psychologist);
-//        } else {
-//            saveUser = userService.save(user);
-//        }
-        User saveUser = userService.save(user);
-        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
+        UserResponseDTO responseDTO = null;
+        User saveUser = null;
+        if (user.getRole() == Role.PSYCHOLOGIST) {
+            PsychologistCard saveCard = PsychologistCardDTO.toModel(card);
+            //PsychologistCard saveCard=null;
+            Psychologist psychologist = PsychologistMapper.userToPsychologist(user, saveCard);
+            saveUser = userService.save(psychologist);
+            responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
+        } else {
+            saveUser = userService.save(user);
+            responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
+        }
         return ResponseEntity.ok(responseDTO);
     }
 

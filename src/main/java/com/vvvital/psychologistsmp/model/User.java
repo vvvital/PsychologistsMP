@@ -1,19 +1,19 @@
 package com.vvvital.psychologistsmp.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "id_seq")
     @Column
+    @NonNull
     private Long id;
     private String email;
     private String password;
