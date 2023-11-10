@@ -9,7 +9,7 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor
 @Table(name = "card")
 public class PsychologistCard {
     @Id
@@ -38,6 +38,67 @@ public class PsychologistCard {
         this.experience = experience;
         this.description = description;
         this.photoLink = photoLink;
+        this.categories = categories;
+    }
+
+    public PsychologistCard(){}
+
+    public PsychologistCard(PsychologistCard model) {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public Integer getExperience() {
+        return experience;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getPhotoLink() {
+        return photoLink;
+    }
+
+    public Set<Categories> getCategories() {
+        return categories;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    public void setExperience(Integer experience) {
+        this.experience = experience;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
+    }
+
+    public void setCategories(Set<Categories> categories) {
         this.categories = categories;
     }
 

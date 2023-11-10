@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
+//@Getter
+//@Setter
+//@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
 public class Psychologist extends User {
@@ -20,7 +20,19 @@ public class Psychologist extends User {
         this.card = card;
     }
 
-//
+    public Psychologist(){}
+
+    public void setCard(PsychologistCard card){
+        this.card=card;
+    }
+
+    public PsychologistCard getCard() {
+        return card;
+    }
+
+
+
+    //
 //
 //
 //    @Override
