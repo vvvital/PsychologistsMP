@@ -1,7 +1,9 @@
 package com.vvvital.psychologistsmp.service;
 
+import com.vvvital.psychologistsmp.dto.PsychologistResponseDTO;
 import com.vvvital.psychologistsmp.dto.UserDTOMapper;
 import com.vvvital.psychologistsmp.dto.UserResponseDTO;
+import com.vvvital.psychologistsmp.model.Psychologist;
 import com.vvvital.psychologistsmp.model.User;
 import com.vvvital.psychologistsmp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +45,11 @@ public class UserService {
 
     public void delete(User user) {
         userRepository.delete(user);
+    }
+
+    public List<PsychologistResponseDTO> findAllPsych() {
+        List<Psychologist> psychologists = userRepository.findAllPsych();
+        List<PsychologistResponseDTO> dtoList = psychologists.stream().map(PsychologistResponseDTO::toDTO).collect(Collectors.toList());
+        return dtoList;
     }
 }
