@@ -1,10 +1,7 @@
 package com.vvvital.psychologistsmp.web;
 
 import com.vvvital.psychologistsmp.dto.*;
-import com.vvvital.psychologistsmp.model.Psychologist;
-import com.vvvital.psychologistsmp.model.PsychologistCard;
-import com.vvvital.psychologistsmp.model.Role;
-import com.vvvital.psychologistsmp.model.User;
+import com.vvvital.psychologistsmp.model.*;
 import com.vvvital.psychologistsmp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/users")
@@ -33,11 +34,10 @@ public class UserController {
     @Operation(summary = "Save user")
     public ResponseEntity<UserResponseDTO> save(@RequestBody User user, PsychologistCardDTO card) {
         logger.info("''''''''''''''''users/save\n{}\n{}\n{}\n{}''''''''''''''''''''''", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName());
-        UserResponseDTO responseDTO = null;
+        UserResponseDTO responseDTO;
         User saveUser = null;
         if (user.getRole() == Role.PSYCHOLOGIST) {
             PsychologistCard saveCard = PsychologistCardDTO.toModel(card);
-            //PsychologistCard saveCard=null;
             Psychologist psychologist = PsychologistMapper.userToPsychologist(user, saveCard);
             saveUser = userService.save(psychologist);
             responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
@@ -70,9 +70,24 @@ public class UserController {
     }
 
     @GetMapping("/all/psychologist")
-    public ResponseEntity<List<PsychologistResponseDTO>>findAllPsychologist(){
-        logger.info("************* find All psychologists *************");
-        return ResponseEntity.ok(userService.findAllPsych());
+    public ResponseEntity<List<PsychologistResponseDTO>> findAllPsychologist(
+            @RequestParam(required = false, defaultValue = "ALL") String location,
+            @RequestParam(required = false, defaultValue = "0") String priceMin,
+            @RequestParam(required = false, defaultValue = "99999") String priceMax,
+            @RequestParam(required = false, defaultValue = "0") String ratingMin,
+            @RequestParam(required = false, defaultValue = "5") String ratingMax,
+            @RequestParam(required = false, defaultValue = "0") String experienceMin,
+            @RequestParam(required = false, defaultValue = "99") String experienceMax,
+            @RequestParam(required = false) String[] categories,
+            @RequestParam(required = false) String order
+    ) {
+        logger.info("************* find All psychologists priceMin={} priceMax={} ratingMin={} ratingMax={} *************", priceMin, priceMax, ratingMin, ratingMax);
+        Set<Categories> categoriesSet=null;
+        if (categories != null) {
+            categoriesSet = Arrays.stream(categories).map(Categories::valueOf).collect(Collectors.toSet());
+        }
+        return ResponseEntity.ok(userService.findAllPsych(Location.valueOf(location), strToInt(priceMin), strToInt(priceMax)
+                , strToInt(ratingMin), strToInt(ratingMax), strToInt(experienceMin), strToInt(experienceMax), categoriesSet, order));
     }
 
     @DeleteMapping("/delete")
@@ -81,4 +96,14 @@ public class UserController {
         userService.delete(user);
         return ResponseEntity.ok("User deleted successfully");
     }
+
+
+    public Integer strToInt(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException exception) {
+            return 0;
+        }
+    }
 }
+

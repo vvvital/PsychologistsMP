@@ -81,10 +81,6 @@ public class PsychologistCardDTO {
 
     public void setCategories(Set<Categories> categories) {
         this.categories=categories;
-//        for (String c : categories
-//        ) {
-//            this.categories.add(Categories.valueOf(c));
-
     }
 }
 
