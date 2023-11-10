@@ -2,12 +2,14 @@ package com.vvvital.psychologistsmp.service;
 
 import com.vvvital.psychologistsmp.dto.PsychologistResponseDTO;
 import com.vvvital.psychologistsmp.dto.UserDTOMapper;
+import com.vvvital.psychologistsmp.dto.UserRequestDTO;
 import com.vvvital.psychologistsmp.dto.UserResponseDTO;
 import com.vvvital.psychologistsmp.model.Categories;
 import com.vvvital.psychologistsmp.model.Location;
 import com.vvvital.psychologistsmp.model.Psychologist;
 import com.vvvital.psychologistsmp.model.User;
 import com.vvvital.psychologistsmp.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +53,9 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void delete(User user) {
-        userRepository.delete(user);
+    public void deleteUser(String email) {
+        User users = findByEmail(email);
+        userRepository.delete(users);
     }
 
     public List<PsychologistResponseDTO> findAllPsych(Location location, Integer priceMin, Integer priceMax
@@ -95,5 +98,42 @@ public class UserService {
             return psychologistList;
         }
         return psychologists;
+    }
+
+    public User updateUser(Long id, UserRequestDTO userRequestDTO) {
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        existingUser.setEmail(userRequestDTO.getEmail());
+        existingUser.setPassword(userRequestDTO.getPassword());
+        existingUser.setFirstName(userRequestDTO.getFirstName());
+        existingUser.setLastName(userRequestDTO.getLastName());
+        existingUser.setRole(userRequestDTO.getRole());
+        existingUser.setLocation(userRequestDTO.getLocation());
+
+        return userRepository.save(existingUser);
+    }
+
+    public User patchUser(Long id, UserRequestDTO userRequestDTO) {
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        if (userRequestDTO.getEmail() != null) {
+            existingUser.setEmail(userRequestDTO.getEmail());
+        }
+        if (userRequestDTO.getPassword() != null) {
+            existingUser.setPassword(userRequestDTO.getPassword());
+        }
+        if (userRequestDTO.getFirstName() != null) {
+            existingUser.setFirstName(userRequestDTO.getFirstName());
+        }
+        if (userRequestDTO.getLastName() != null) {
+            existingUser.setLastName(userRequestDTO.getLastName());
+        }
+        if (userRequestDTO.getRole() != null) {
+            existingUser.setRole(userRequestDTO.getRole());
+        }
+        if (userRequestDTO.getLocation() != null) {
+            existingUser.setLocation(userRequestDTO.getLocation());
+        }
+        return userRepository.save(existingUser);
     }
 }

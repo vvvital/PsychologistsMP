@@ -90,12 +90,32 @@ public class UserController {
                 , strToInt(ratingMin), strToInt(ratingMax), strToInt(experienceMin), strToInt(experienceMax), categoriesSet, order));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{email}")
     @Operation(summary = "Delete user")
-    public ResponseEntity<String> delete(@RequestBody User user) {
-        userService.delete(user);
-        return ResponseEntity.ok("User deleted successfully");
+    public ResponseEntity<User> delete(@PathVariable String email) {
+        logger.info("********* find by email {}", email);
+        User user = userService.findByEmail(email);
+        userService.deleteUser(email);
+        return ResponseEntity.ok(user);
+
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update user")
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+        User updatedUser = userService.updateUser(id, userRequestDTO);
+        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(updatedUser);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "Update user")
+    public ResponseEntity<UserResponseDTO> patchUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+        User patchedUser = userService.patchUser(id, userRequestDTO);
+        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(patchedUser);
+        return ResponseEntity.ok(responseDTO);
+    }
+
 
 
     public Integer strToInt(String str) {
