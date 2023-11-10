@@ -4,7 +4,9 @@ public enum Location {
     KYIV ("Київ"),
     ODESSA ("Одесса"),
     DNIPRO ("Дніпро"),
-    LVIV ("Львів");
+    LVIV ("Львів"),
+
+    ALL ("All");
 
     private final String displayLocation;
 

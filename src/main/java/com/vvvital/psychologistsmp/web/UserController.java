@@ -11,7 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/users")
@@ -67,17 +71,23 @@ public class UserController {
 
     @GetMapping("/all/psychologist")
     public ResponseEntity<List<PsychologistResponseDTO>> findAllPsychologist(
-            @RequestParam(required = false, defaultValue = "KYIV") String location,
+            @RequestParam(required = false, defaultValue = "ALL") String location,
             @RequestParam(required = false, defaultValue = "0") String priceMin,
             @RequestParam(required = false, defaultValue = "99999") String priceMax,
             @RequestParam(required = false, defaultValue = "0") String ratingMin,
             @RequestParam(required = false, defaultValue = "5") String ratingMax,
             @RequestParam(required = false, defaultValue = "0") String experienceMin,
-            @RequestParam(required = false, defaultValue = "99") String experienceMax
+            @RequestParam(required = false, defaultValue = "99") String experienceMax,
+            @RequestParam(required = false) String[] categories,
+            @RequestParam(required = false) String order
     ) {
         logger.info("************* find All psychologists priceMin={} priceMax={} ratingMin={} ratingMax={} *************", priceMin, priceMax, ratingMin, ratingMax);
+        Set<Categories> categoriesSet=null;
+        if (categories != null) {
+            categoriesSet = Arrays.stream(categories).map(Categories::valueOf).collect(Collectors.toSet());
+        }
         return ResponseEntity.ok(userService.findAllPsych(Location.valueOf(location), strToInt(priceMin), strToInt(priceMax)
-                , strToInt(ratingMin), strToInt(ratingMax), strToInt(experienceMin), strToInt(experienceMax)));
+                , strToInt(ratingMin), strToInt(ratingMax), strToInt(experienceMin), strToInt(experienceMax), categoriesSet, order));
     }
 
     @DeleteMapping("/delete")
