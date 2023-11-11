@@ -57,7 +57,7 @@ public class UserService {
     }
 
     public List<PsychologistResponseDTO> findAllPsych(Location location, Integer priceMin, Integer priceMax
-            , Integer ratingMin, Integer ratingMax, Integer experienceMin, Integer experienceMax, Set<Categories> categories,String order) {
+          , Integer ratingMin, Integer ratingMax, Integer experienceMin, Integer experienceMax, Set<Categories> categories, String order) {
         logger.info("************* find All psychologists location={}  priceMin={} priceMax={} ratingMin={} ratingMax={} *************", location, priceMin, priceMax, ratingMin, ratingMax);
         List<Psychologist> psychologists = userRepository.findAllPsych();
         if (location != Location.ALL) {
@@ -74,19 +74,19 @@ public class UserService {
                 .filter(psychologist -> psychologist.getCard().getExperience() >= experienceMin)
                 .filter(psychologist -> psychologist.getCard().getExperience() <= experienceMax)
                 .collect(Collectors.toList());
-                if (order!=null&&order.equals("price")){
-                    psychologists.sort(Comparator.comparing(psychologist -> psychologist.getCard().getPrice()));
-                }else if (order!=null&&order.equals("rating")){
-                    psychologists.sort(Comparator.comparing(psychologist -> psychologist.getCard().getRating()));
-                }else {
-                    psychologists.sort(Comparator.comparing(User::getId));
-                }
+        if (order != null && order.equals("price")) {
+            psychologists.sort(Comparator.comparing(psychologist -> psychologist.getCard().getPrice()));
+        } else if (order != null && order.equals("rating")) {
+            psychologists.sort(Comparator.comparing(psychologist -> psychologist.getCard().getRating()));
+        } else {
+            psychologists.sort(Comparator.comparing(User::getId));
+        }
         return psychologists.stream().map(PsychologistResponseDTO::toDTO).collect(Collectors.toList());
     }
 
     public List<Psychologist> selerctByCategories(List<Psychologist> psychologists, Set<Categories> categories) {
         List<Psychologist> psychologistList = new ArrayList<>();
-        if (categories!=null&&!categories.isEmpty()) {
+        if (categories != null && !categories.isEmpty()) {
             for (Psychologist p : psychologists
             ) {
                 if (categories.stream().anyMatch(cat1 -> p.getCard().getCategories().stream().anyMatch(cat1::equals))) {

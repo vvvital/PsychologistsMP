@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    image: 'postgres:latest'
+
+    restart: always
+    container_name: containermarket
+
+    environment:
+      POSTGRES_DB: psychologist_bsuq
+      POSTGRES_PASSWORD: YDetuEJr0AoqS7u3PJqnO12zFqEuAu5E
+      POSTGRES_USER: vvvital
+
+
+    ports:
+      - '5432:5432'
+    networks:
+      - networkmarket
+
+
+  marketplase:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+    networks:
+      - networkmarket
+
+
+networks:
+  networkmarket:
+    driver: bridge

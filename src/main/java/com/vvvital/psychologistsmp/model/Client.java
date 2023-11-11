@@ -9,12 +9,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Table(name = "users")
 public class Client extends User{
 
     public Client(String email, String password, String firstName, String lastName, Role role, Location location) {
         super(email, password, firstName, lastName, role, location);
     }
+    public Client(){}
 
 }
