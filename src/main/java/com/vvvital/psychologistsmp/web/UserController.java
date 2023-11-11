@@ -102,16 +102,16 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update user")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
-        User updatedUser = userService.updateUser(id, userRequestDTO);
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
+        User updatedUser = userService.updateUser(id, userRequestDTO, card);
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(updatedUser);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update user")
-    public ResponseEntity<UserResponseDTO> patchUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
-        User patchedUser = userService.patchUser(id, userRequestDTO);
+    public ResponseEntity<UserResponseDTO> patchUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
+        User patchedUser = userService.patchUser(id, userRequestDTO, card);
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(patchedUser);
         return ResponseEntity.ok(responseDTO);
     }

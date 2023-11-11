@@ -1,13 +1,8 @@
 package com.vvvital.psychologistsmp.service;
 
-import com.vvvital.psychologistsmp.dto.PsychologistResponseDTO;
-import com.vvvital.psychologistsmp.dto.UserDTOMapper;
-import com.vvvital.psychologistsmp.dto.UserRequestDTO;
-import com.vvvital.psychologistsmp.dto.UserResponseDTO;
-import com.vvvital.psychologistsmp.model.Categories;
-import com.vvvital.psychologistsmp.model.Location;
-import com.vvvital.psychologistsmp.model.Psychologist;
-import com.vvvital.psychologistsmp.model.User;
+import com.vvvital.psychologistsmp.dto.*;
+import com.vvvital.psychologistsmp.model.*;
+import com.vvvital.psychologistsmp.repository.CardRepository;
 import com.vvvital.psychologistsmp.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -27,12 +22,15 @@ public class UserService {
     Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
 
+    private final CardRepository cardRepository;
+
     private final UserDTOMapper userDTOMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserDTOMapper userDTOMapper) {
+    public UserService(UserRepository userRepository, UserDTOMapper userDTOMapper, CardRepository cardRepository) {
         this.userRepository = userRepository;
         this.userDTOMapper = userDTOMapper;
+        this.cardRepository = cardRepository;
     }
 
 
@@ -100,7 +98,7 @@ public class UserService {
         return psychologists;
     }
 
-    public User updateUser(Long id, UserRequestDTO userRequestDTO) {
+    public User updateUser(Long id, UserRequestDTO userRequestDTO, PsychologistCardDTO cardDTO) {
         User existingUser = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
         existingUser.setEmail(userRequestDTO.getEmail());
@@ -110,10 +108,26 @@ public class UserService {
         existingUser.setRole(userRequestDTO.getRole());
         existingUser.setLocation(userRequestDTO.getLocation());
 
+        if (existingUser.getRole() == Role.PSYCHOLOGIST && cardDTO != null) {
+            PsychologistCard psychologistCard = ((Psychologist) existingUser).getCard();
+
+            if (psychologistCard != null) {
+                psychologistCard.setPrice(cardDTO.getPrice());
+                psychologistCard.setRating(cardDTO.getRating());
+                psychologistCard.setExperience(cardDTO.getExperience());
+                psychologistCard.setDescription(cardDTO.getDescription());
+                psychologistCard.setPhotoLink(cardDTO.getPhotoLink());
+                psychologistCard.setCategories(cardDTO.getCategories());
+            } else {
+                psychologistCard = PsychologistCardDTO.toModel(cardDTO);
+                ((Psychologist) existingUser).setCard(psychologistCard);
+            }
+        }
+
         return userRepository.save(existingUser);
     }
 
-    public User patchUser(Long id, UserRequestDTO userRequestDTO) {
+    public User patchUser(Long id, UserRequestDTO userRequestDTO, PsychologistCardDTO cardDTO) {
         User existingUser = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
         if (userRequestDTO.getEmail() != null) {
@@ -134,6 +148,35 @@ public class UserService {
         if (userRequestDTO.getLocation() != null) {
             existingUser.setLocation(userRequestDTO.getLocation());
         }
+
+        if (existingUser.getRole() == Role.PSYCHOLOGIST && cardDTO != null) {
+            PsychologistCard psychologistCard = ((Psychologist) existingUser).getCard();
+
+            if (psychologistCard != null) {
+                if (cardDTO.getPrice() != null) {
+                    psychologistCard.setPrice(cardDTO.getPrice());
+                }
+                if (cardDTO.getRating() != null) {
+                    psychologistCard.setRating(cardDTO.getRating());
+                }
+                if (cardDTO.getExperience() != null) {
+                    psychologistCard.setExperience(cardDTO.getExperience());
+                }
+                if (cardDTO.getDescription() != null) {
+                    psychologistCard.setDescription(cardDTO.getDescription());
+                }
+                if (cardDTO.getPhotoLink() != null) {
+                    psychologistCard.setPhotoLink(cardDTO.getPhotoLink());
+                }
+                if (cardDTO.getCategories() != null) {
+                    psychologistCard.setCategories(cardDTO.getCategories());
+                }
+            } else {
+                psychologistCard = PsychologistCardDTO.toModel(cardDTO);
+                ((Psychologist) existingUser).setCard(psychologistCard);
+            }
+        }
+
         return userRepository.save(existingUser);
     }
 }
