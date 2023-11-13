@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "User")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
