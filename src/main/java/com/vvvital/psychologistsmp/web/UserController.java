@@ -33,19 +33,11 @@ public class UserController {
 
     @PostMapping("/save")
     @Operation(summary = "Save user")
-    public ResponseEntity<UserResponseDTO> save(@RequestBody User user, PsychologistCardDTO card) {
+    public ResponseEntity<UserResponseDTO> save(@RequestBody User user) {
         logger.info("''''''''''''''''users/save\n{}\n{}\n{}\n{}''''''''''''''''''''''", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName());
-        UserResponseDTO responseDTO;
-        User saveUser = null;
-        if (user.getRole() == Role.PSYCHOLOGIST) {
-            PsychologistCard saveCard = PsychologistCardDTO.toModel(card);
-            Psychologist psychologist = PsychologistMapper.userToPsychologist(user, saveCard);
-            saveUser = userService.save(psychologist);
-            responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
-        } else {
-            saveUser = userService.save(user);
-            responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
-        }
+        User saveUser = userService.save(user);
+        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
+
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -71,7 +63,7 @@ public class UserController {
     }
 
     @GetMapping("/all/psychologist")
-    public ResponseEntity<List<PsychologistResponseDTO>> findAllPsychologist(
+    public ResponseEntity<List<UserResponseDTO>> findAllPsychologist(
             @RequestParam(required = false, defaultValue = "ALL") String location,
             @RequestParam(required = false, defaultValue = "0") String priceMin,
             @RequestParam(required = false, defaultValue = "99999") String priceMax,
@@ -83,7 +75,7 @@ public class UserController {
             @RequestParam(required = false) String order
     ) {
         logger.info("************* find All psychologists priceMin={} priceMax={} ratingMin={} ratingMax={} *************", priceMin, priceMax, ratingMin, ratingMax);
-        Set<Categories> categoriesSet=null;
+        Set<Categories> categoriesSet = null;
         if (categories != null) {
             categoriesSet = Arrays.stream(categories).map(Categories::valueOf).collect(Collectors.toSet());
         }
@@ -116,7 +108,6 @@ public class UserController {
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(patchedUser);
         return ResponseEntity.ok(responseDTO);
     }
-
 
 
     public Integer strToInt(String str) {

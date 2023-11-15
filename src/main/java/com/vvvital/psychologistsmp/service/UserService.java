@@ -56,10 +56,10 @@ public class UserService {
         userRepository.delete(users);
     }
 
-    public List<PsychologistResponseDTO> findAllPsych(Location location, Integer priceMin, Integer priceMax
+    public List<UserResponseDTO> findAllPsych(Location location, Integer priceMin, Integer priceMax
           , Integer ratingMin, Integer ratingMax, Integer experienceMin, Integer experienceMax, Set<Categories> categories, String order) {
         logger.info("************* find All psychologists location={}  priceMin={} priceMax={} ratingMin={} ratingMax={} *************", location, priceMin, priceMax, ratingMin, ratingMax);
-        List<Psychologist> psychologists = userRepository.findAllPsych();
+        List<User> psychologists = userRepository.findAllPsych();
         if (location != Location.ALL) {
             psychologists = psychologists.stream()
                     .filter(psychologist -> psychologist.getLocation() == location)
@@ -81,13 +81,13 @@ public class UserService {
         } else {
             psychologists.sort(Comparator.comparing(User::getId));
         }
-        return psychologists.stream().map(PsychologistResponseDTO::toDTO).collect(Collectors.toList());
+        return psychologists.stream().map(userDTOMapper::userToUserResponseDTO).collect(Collectors.toList());
     }
 
-    public List<Psychologist> selerctByCategories(List<Psychologist> psychologists, Set<Categories> categories) {
-        List<Psychologist> psychologistList = new ArrayList<>();
+    public List<User> selerctByCategories(List<User> psychologists, Set<Categories> categories) {
+        List<User> psychologistList = new ArrayList<>();
         if (categories != null && !categories.isEmpty()) {
-            for (Psychologist p : psychologists
+            for (User p : psychologists
             ) {
                 if (categories.stream().anyMatch(cat1 -> p.getCard().getCategories().stream().anyMatch(cat1::equals))) {
                     psychologistList.add(p);
@@ -105,11 +105,11 @@ public class UserService {
         existingUser.setPassword(userRequestDTO.getPassword());
         existingUser.setFirstName(userRequestDTO.getFirstName());
         existingUser.setLastName(userRequestDTO.getLastName());
-        existingUser.setRole(userRequestDTO.getRole());
+        existingUser.setRoles(userRequestDTO.getRole());
         existingUser.setLocation(userRequestDTO.getLocation());
 
-        if (existingUser.getRole() == Role.PSYCHOLOGIST && cardDTO != null) {
-            PsychologistCard psychologistCard = ((Psychologist) existingUser).getCard();
+        if (existingUser.getRoles().contains(Role.PSYCHOLOGIST) && cardDTO != null) {
+            PsychologistCard psychologistCard = (existingUser).getCard();
 
             if (psychologistCard != null) {
                 psychologistCard.setPrice(cardDTO.getPrice());
@@ -120,7 +120,7 @@ public class UserService {
                 psychologistCard.setCategories(cardDTO.getCategories());
             } else {
                 psychologistCard = PsychologistCardDTO.toModel(cardDTO);
-                ((Psychologist) existingUser).setCard(psychologistCard);
+                (existingUser).setCard(psychologistCard);
             }
         }
 
@@ -143,14 +143,14 @@ public class UserService {
             existingUser.setLastName(userRequestDTO.getLastName());
         }
         if (userRequestDTO.getRole() != null) {
-            existingUser.setRole(userRequestDTO.getRole());
+            existingUser.setRoles(userRequestDTO.getRole());
         }
         if (userRequestDTO.getLocation() != null) {
             existingUser.setLocation(userRequestDTO.getLocation());
         }
 
-        if (existingUser.getRole() == Role.PSYCHOLOGIST && cardDTO != null) {
-            PsychologistCard psychologistCard = ((Psychologist) existingUser).getCard();
+        if (existingUser.getRoles().contains(Role.PSYCHOLOGIST) && cardDTO != null) {
+            PsychologistCard psychologistCard = (existingUser).getCard();
 
             if (psychologistCard != null) {
                 if (cardDTO.getPrice() != null) {
@@ -173,7 +173,7 @@ public class UserService {
                 }
             } else {
                 psychologistCard = PsychologistCardDTO.toModel(cardDTO);
-                ((Psychologist) existingUser).setCard(psychologistCard);
+                (existingUser).setCard(psychologistCard);
             }
         }
 
