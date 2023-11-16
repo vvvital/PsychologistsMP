@@ -4,6 +4,7 @@ import com.vvvital.psychologistsmp.dto.*;
 import com.vvvital.psychologistsmp.model.*;
 import com.vvvital.psychologistsmp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.aspectj.apache.bcel.classfile.Module;
 import org.slf4j.Logger;
@@ -38,6 +39,15 @@ public class UserController {
         User saveUser = userService.save(userDTOMapper.requestDTOToUser(user));
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
 
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PostMapping("/save/{id}/psychologist/")
+    @Operation(summary = "To become a psychologist")
+    public ResponseEntity<UserResponseDTO>  becomePsychologist(@PathVariable Long id,
+                                                               @RequestBody UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
+        User becomePsychologist = userService.becomePsychologist(id, userRequestDTO, card);
+        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(becomePsychologist);
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -94,17 +104,17 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update user")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
-        User updatedUser = userService.updateUser(id, userRequestDTO, card);
+    @Operation(summary = "Update general information")
+    public ResponseEntity<UserResponseDTO> updateGeneralInformation(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+        User updatedUser = userService.updateGeneralInformation(id, userRequestDTO);
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(updatedUser);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PatchMapping("/{id}")
-    @Operation(summary = "Update user")
-    public ResponseEntity<UserResponseDTO> patchUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
-        User patchedUser = userService.patchUser(id, userRequestDTO, card);
+    @Operation(summary = "Update general information")
+    public ResponseEntity<UserResponseDTO> patchGeneralInformation(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+        User patchedUser = userService.patchGeneralInformation(id, userRequestDTO);
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(patchedUser);
         return ResponseEntity.ok(responseDTO);
     }
