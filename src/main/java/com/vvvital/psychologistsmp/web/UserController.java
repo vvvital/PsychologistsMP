@@ -33,9 +33,9 @@ public class UserController {
 
     @PostMapping("/save")
     @Operation(summary = "Save user")
-    public ResponseEntity<UserResponseDTO> save(@RequestBody User user) {
-        logger.info("''''''''''''''''users/save\n{}\n{}\n{}\n{}''''''''''''''''''''''", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName());
-        User saveUser = userService.save(user);
+    public ResponseEntity<UserResponseDTO> save(@RequestBody UserRequestDTO user) {
+        logger.info("''''''''''''''''users/save\n{}\n{}\n{}\n{}\n{}''''''''''''''''''''''", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(),user.getRoles());
+        User saveUser = userService.save(userDTOMapper.requestDTOToUser(user));
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
 
         return ResponseEntity.ok(responseDTO);

@@ -35,6 +35,7 @@ public class UserService {
 
 
     public User save(User user) {
+        System.out.println("User service.save " + user.getRoles());
         return userRepository.save(user);
     }
 
@@ -105,7 +106,7 @@ public class UserService {
         existingUser.setPassword(userRequestDTO.getPassword());
         existingUser.setFirstName(userRequestDTO.getFirstName());
         existingUser.setLastName(userRequestDTO.getLastName());
-        existingUser.setRoles(userRequestDTO.getRole());
+        existingUser.setRoles(userRequestDTO.getRoles());
         existingUser.setLocation(userRequestDTO.getLocation());
 
         if (existingUser.getRoles().contains(Role.PSYCHOLOGIST) && cardDTO != null) {
@@ -142,8 +143,8 @@ public class UserService {
         if (userRequestDTO.getLastName() != null) {
             existingUser.setLastName(userRequestDTO.getLastName());
         }
-        if (userRequestDTO.getRole() != null) {
-            existingUser.setRoles(userRequestDTO.getRole());
+        if (userRequestDTO.getRoles() != null) {
+            existingUser.setRoles(userRequestDTO.getRoles());
         }
         if (userRequestDTO.getLocation() != null) {
             existingUser.setLocation(userRequestDTO.getLocation());

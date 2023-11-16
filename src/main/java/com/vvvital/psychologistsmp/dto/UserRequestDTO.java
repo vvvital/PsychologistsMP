@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,12 +54,16 @@ public class UserRequestDTO {
         this.lastName = lastName;
     }
 
-    public Set<Role> getRole() {
-        return roles;
+    public Set<Role> getRoles() {
+        return roles ;
     }
 
-    public void setRole(Set<Role> role) {
-        this.roles = roles;
+    public void setRole(Role...role) {
+        System.out.println("UserRequestDTO.setRole");
+        Stream.of(role).forEach(System.out::println);
+        this.roles= Stream.of(role).collect(Collectors.toSet());
+        System.out.println("set from method setRole" + this.roles);
+
     }
 
     public Location getLocation() {
