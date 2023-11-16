@@ -55,14 +55,11 @@ public class UserRequestDTO {
     }
 
     public Set<Role> getRoles() {
-        return roles ;
+        return roles;
     }
 
-    public void setRole(Role...role) {
-        System.out.println("UserRequestDTO.setRole");
-        Stream.of(role).forEach(System.out::println);
-        this.roles= Stream.of(role).collect(Collectors.toSet());
-        System.out.println("set from method setRole" + this.roles);
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
 
     }
 
