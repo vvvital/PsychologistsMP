@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequestDTO {
@@ -15,7 +19,7 @@ public class UserRequestDTO {
     private String password;
     private String firstName;
     private String lastName;
-    private Role role;
+    private Set<Role> roles;
     private Location location;
 
     public String getEmail() {
@@ -50,12 +54,13 @@ public class UserRequestDTO {
         this.lastName = lastName;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+
     }
 
     public Location getLocation() {

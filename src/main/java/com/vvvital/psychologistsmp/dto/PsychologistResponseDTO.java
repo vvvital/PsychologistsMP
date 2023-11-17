@@ -1,26 +1,25 @@
 package com.vvvital.psychologistsmp.dto;
 
 import com.vvvital.psychologistsmp.model.*;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+
+import java.util.Set;
 
 public class PsychologistResponseDTO {
     private Long id;
     private String email;
     private String firstName;
     private String lastName;
-    private Role role;
+    private Set<Role> roles;
     private Location location;
     private PsychologistCard card;
-    public static PsychologistResponseDTO toDTO(Psychologist psychologist){
+    public static PsychologistResponseDTO toDTO(User psychologist){
         PsychologistResponseDTO dto=new PsychologistResponseDTO();
         dto.setId(psychologist.getId());
         dto.setEmail(psychologist.getEmail());
         dto.setFirstName(psychologist.getFirstName());
         dto.setLastName(psychologist.getLastName());
         dto.setLocation(psychologist.getLocation());
-        dto.setRole(psychologist.getRole());
+        dto.setRole(psychologist.getRoles());
         dto.setCard(psychologist.getCard());
         return dto;
     }
@@ -41,8 +40,8 @@ public class PsychologistResponseDTO {
         this.lastName = lastName;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRole(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public void setLocation(Location location) {
@@ -69,8 +68,8 @@ public class PsychologistResponseDTO {
         return lastName;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRole() {
+        return roles;
     }
 
     public Location getLocation() {

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponseDTO {
@@ -15,7 +17,7 @@ public class UserResponseDTO {
     private String email;
     private String firstName;
     private String lastName;
-    private Role role;
+    private Set<Role>roles;
     private Location location;
 
     public Long getId() {
@@ -50,12 +52,12 @@ public class UserResponseDTO {
         this.lastName = lastName;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRole() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public Location getLocation() {

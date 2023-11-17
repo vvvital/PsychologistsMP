@@ -4,6 +4,7 @@ import com.vvvital.psychologistsmp.dto.*;
 import com.vvvital.psychologistsmp.model.*;
 import com.vvvital.psychologistsmp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.aspectj.apache.bcel.classfile.Module;
 import org.slf4j.Logger;
@@ -33,19 +34,20 @@ public class UserController {
 
     @PostMapping("/save")
     @Operation(summary = "Save user")
-    public ResponseEntity<UserResponseDTO> save(@RequestBody User user, PsychologistCardDTO card) {
-        logger.info("''''''''''''''''users/save\n{}\n{}\n{}\n{}''''''''''''''''''''''", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName());
-        UserResponseDTO responseDTO;
-        User saveUser = null;
-        if (user.getRole() == Role.PSYCHOLOGIST) {
-            PsychologistCard saveCard = PsychologistCardDTO.toModel(card);
-            Psychologist psychologist = PsychologistMapper.userToPsychologist(user, saveCard);
-            saveUser = userService.save(psychologist);
-            responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
-        } else {
-            saveUser = userService.save(user);
-            responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
-        }
+    public ResponseEntity<UserResponseDTO> save(@RequestBody UserRequestDTO user) {
+        logger.info("''''''''''''''''users/save\n{}\n{}\n{}\n{}\n{}''''''''''''''''''''''", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(),user.getRoles());
+        User saveUser = userService.save(userDTOMapper.requestDTOToUser(user));
+        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(saveUser);
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PostMapping("/save/{id}/psychologist/")
+    @Operation(summary = "To become a psychologist")
+    public ResponseEntity<UserResponseDTO>  becomePsychologist(@PathVariable Long id,
+                                                               @RequestBody UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
+        User becomePsychologist = userService.becomePsychologist(id, userRequestDTO, card);
+        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(becomePsychologist);
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -71,7 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/all/psychologist")
-    public ResponseEntity<List<PsychologistResponseDTO>> findAllPsychologist(
+    public ResponseEntity<List<UserResponseDTO>> findAllPsychologist(
             @RequestParam(required = false, defaultValue = "ALL") String location,
             @RequestParam(required = false, defaultValue = "0") String priceMin,
             @RequestParam(required = false, defaultValue = "99999") String priceMax,
@@ -83,7 +85,7 @@ public class UserController {
             @RequestParam(required = false) String order
     ) {
         logger.info("************* find All psychologists priceMin={} priceMax={} ratingMin={} ratingMax={} *************", priceMin, priceMax, ratingMin, ratingMax);
-        Set<Categories> categoriesSet=null;
+        Set<Categories> categoriesSet = null;
         if (categories != null) {
             categoriesSet = Arrays.stream(categories).map(Categories::valueOf).collect(Collectors.toSet());
         }
@@ -102,21 +104,20 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update user")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
-        User updatedUser = userService.updateUser(id, userRequestDTO, card);
+    @Operation(summary = "Update general information")
+    public ResponseEntity<UserResponseDTO> updateGeneralInformation(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+        User updatedUser = userService.updateGeneralInformation(id, userRequestDTO);
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(updatedUser);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PatchMapping("/{id}")
-    @Operation(summary = "Update user")
-    public ResponseEntity<UserResponseDTO> patchUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
-        User patchedUser = userService.patchUser(id, userRequestDTO, card);
+    @Operation(summary = "Update general information")
+    public ResponseEntity<UserResponseDTO> patchGeneralInformation(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+        User patchedUser = userService.patchGeneralInformation(id, userRequestDTO);
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(patchedUser);
         return ResponseEntity.ok(responseDTO);
     }
-
 
 
     public Integer strToInt(String str) {

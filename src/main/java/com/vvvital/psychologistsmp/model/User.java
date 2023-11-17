@@ -3,6 +3,8 @@ package com.vvvital.psychologistsmp.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -22,16 +24,20 @@ public class User {
     @Column
     private String lastName;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Role> roles;
     @Enumerated(EnumType.STRING)
     private Location location;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn (name = "card_id")
+    private PsychologistCard card;
 
-    public User(String email, String password, String firstName, String lastName, Role role, Location location) {
+    public User(String email, String password, String firstName, String lastName, Set<Role> roles, Location location) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = role;
+        this.roles = roles;
         this.location = location;
     }
 
@@ -58,13 +64,15 @@ public class User {
         return lastName;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     public Location getLocation() {
         return location;
     }
+
+    public PsychologistCard getCard(){return card;}
 
     public void setId(Long id) {
         this.id = id;
@@ -86,11 +94,13 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> role) {
+        this.roles = role;
     }
 
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    public void setCard(PsychologistCard card){this.card=card;}
 }
