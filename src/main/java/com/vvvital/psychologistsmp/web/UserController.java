@@ -45,8 +45,8 @@ public class UserController {
     @PostMapping("/save/{id}/psychologist/")
     @Operation(summary = "To become a psychologist")
     public ResponseEntity<UserResponseDTO>  becomePsychologist(@PathVariable Long id,
-                                                               @RequestBody UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
-        User becomePsychologist = userService.becomePsychologist(id, userRequestDTO, card);
+                                                               @RequestBody  PsychologistCardDTO card) {
+        User becomePsychologist = userService.becomePsychologist(id, card);
         UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(becomePsychologist);
         return ResponseEntity.ok(responseDTO);
     }
