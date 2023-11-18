@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "User")
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
@@ -73,6 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/all/psychologist")
+    @Operation(summary = "Get all psychologists")
     public ResponseEntity<List<UserResponseDTO>> findAllPsychologist(
             @RequestParam(required = false, defaultValue = "ALL") String location,
             @RequestParam(required = false, defaultValue = "0") String priceMin,
@@ -103,7 +104,7 @@ public class UserController {
 
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/general-information")
     @Operation(summary = "Update general information")
     public ResponseEntity<UserResponseDTO> updateGeneralInformation(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
         User updatedUser = userService.updateGeneralInformation(id, userRequestDTO);
@@ -111,7 +112,7 @@ public class UserController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/general-information")
     @Operation(summary = "Update general information")
     public ResponseEntity<UserResponseDTO> patchGeneralInformation(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
         User patchedUser = userService.patchGeneralInformation(id, userRequestDTO);
@@ -119,6 +120,21 @@ public class UserController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @PutMapping("/{id}/psychologist-card")
+    @Operation(summary = "Update psychologist card")
+    public ResponseEntity<PsychologistCardDTO> updatePsychologistCard(@PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO) {
+        PsychologistCard updatePsychologistCard = userService.updatePsychologistCard(id, cardDTO);
+        PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(updatePsychologistCard);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PatchMapping("/{id}/psychologist-card")
+    @Operation(summary = "Update psychologist card")
+    public ResponseEntity<PsychologistCardDTO> patchPsychologistCard(@PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO) {
+        PsychologistCard patchedPsychologistCard = userService.patchPsychologistCard(id, cardDTO);
+        PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(patchedPsychologistCard);
+        return ResponseEntity.ok(responseDTO);
+    }
 
     public Integer strToInt(String str) {
         try {
