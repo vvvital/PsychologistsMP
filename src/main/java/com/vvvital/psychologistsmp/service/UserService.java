@@ -134,12 +134,12 @@ public class UserService {
         return userRepository.save(existingGeneralInformation);
     }
 
-    public User becomePsychologist(Long id, UserRequestDTO userRequestDTO, PsychologistCardDTO card) {
+    public User becomePsychologist(Long id, PsychologistCardDTO card) {
         User currentUser = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
-
-        if (userRequestDTO.getRoles() != null) {
-            currentUser.setRoles(userRequestDTO.getRoles());
-        }
+        currentUser.setRoles(Role.PSYCHOLOGIST);
+//        if (userRequestDTO.getRoles() != null) {
+//            currentUser.setRoles(userRequestDTO.getRoles());
+//        }
         if (currentUser.getCard() != null) {
             throw new IllegalStateException("User already has a psychologist card");
         } else {

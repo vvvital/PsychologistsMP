@@ -98,6 +98,10 @@ public class User {
         this.roles = role;
     }
 
+    public void setRoles(Role role){
+        this.roles.add(role);
+    }
+
     public void setLocation(Location location) {
         this.location = location;
     }
