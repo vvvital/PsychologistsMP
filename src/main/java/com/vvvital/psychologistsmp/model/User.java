@@ -8,7 +8,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
@@ -107,4 +106,18 @@ public class User {
     }
 
     public void setCard(PsychologistCard card){this.card=card;}
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", roles=" + roles +
+                ", location=" + location +
+                ", card=" + card +
+                '}';
+    }
 }
