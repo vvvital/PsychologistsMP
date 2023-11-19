@@ -2,6 +2,7 @@ package com.vvvital.psychologistsmp.dto;
 
 import com.vvvital.psychologistsmp.model.Categories;
 import com.vvvital.psychologistsmp.model.PsychologistCard;
+import com.vvvital.psychologistsmp.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +34,17 @@ public class PsychologistCardDTO {
         card.setPhotoLink(dto.getPhotoLink());
         card.setCategories(dto.getCategories());
         return card;
+    }
+
+    public static PsychologistCardDTO toDTO(PsychologistCard model) {
+        PsychologistCardDTO dto = new PsychologistCardDTO();
+        dto.setPrice(model.getPrice());
+        dto.setRating(model.getRating());
+        dto.setExperience(model.getExperience());
+        dto.setDescription(model.getDescription());
+        dto.setPhotoLink(model.getPhotoLink());
+        dto.setCategories(model.getCategories());
+        return dto;
     }
 
     public Integer getPrice() {

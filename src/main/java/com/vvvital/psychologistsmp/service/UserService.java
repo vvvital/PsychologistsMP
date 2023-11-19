@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -148,5 +147,43 @@ public class UserService {
             currentUser.setCard(psychologistCard);
         }
         return userRepository.save(currentUser);
+    }
+
+    public PsychologistCard updatePsychologistCard(Long id, PsychologistCardDTO cardDTO) {
+        PsychologistCard existingPsychologistCard = cardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        existingPsychologistCard.setPrice(cardDTO.getPrice());
+        existingPsychologistCard.setRating(cardDTO.getRating());
+        existingPsychologistCard.setExperience(cardDTO.getExperience());
+        existingPsychologistCard.setDescription(cardDTO.getDescription());
+        existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
+        existingPsychologistCard.setCategories(cardDTO.getCategories());
+
+        return cardRepository.save(existingPsychologistCard);
+    }
+
+    public PsychologistCard patchPsychologistCard(Long id, PsychologistCardDTO cardDTO) {
+        PsychologistCard existingPsychologistCard = cardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        if (cardDTO.getPrice() != null) {
+            existingPsychologistCard.setPrice(cardDTO.getPrice());
+        }
+        if (cardDTO.getRating() != null) {
+            existingPsychologistCard.setRating(cardDTO.getRating());
+        }
+        if (cardDTO.getExperience() != null) {
+            existingPsychologistCard.setExperience(cardDTO.getExperience());
+        }
+        if (cardDTO.getDescription() != null) {
+            existingPsychologistCard.setDescription(cardDTO.getDescription());
+        }
+        if (cardDTO.getPhotoLink() != null) {
+            existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
+        }
+        if (cardDTO.getCategories() != null) {
+            existingPsychologistCard.setCategories(cardDTO.getCategories());
+        }
+
+        return cardRepository.save(existingPsychologistCard);
     }
 }
