@@ -64,6 +64,7 @@ public class UserService {
                     .collect(Collectors.toList());
         }
         psychologists = selerctByCategories(psychologists, categories);
+        psychologists.forEach(p-> System.out.println(p.toString()));
         psychologists = psychologists.stream()
                 .filter(psychologist -> psychologist.getCard().getPrice() >= priceMin)
                 .filter(psychologist -> psychologist.getCard().getPrice() <= priceMax)
@@ -72,6 +73,7 @@ public class UserService {
                 .filter(psychologist -> psychologist.getCard().getExperience() >= experienceMin)
                 .filter(psychologist -> psychologist.getCard().getExperience() <= experienceMax)
                 .collect(Collectors.toList());
+        psychologists.forEach(p-> System.out.println(p.toString()));
         if (order != null && order.equals("price")) {
             psychologists.sort(Comparator.comparing(psychologist -> psychologist.getCard().getPrice()));
         } else if (order != null && order.equals("rating")) {
