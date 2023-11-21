@@ -74,7 +74,7 @@ public class UserController {
 
     @GetMapping("/all/psychologist")
     @Operation(summary = "Get all psychologists")
-    public ResponseEntity<List<UserResponseDTO>> findAllPsychologist(
+    public ResponseEntity<List<PsychologistResponseDTO>> findAllPsychologist(
             @RequestParam(required = false, defaultValue = "ALL") String location,
             @RequestParam(required = false, defaultValue = "0") String priceMin,
             @RequestParam(required = false, defaultValue = "99999") String priceMax,
