@@ -54,26 +54,25 @@ public class UserService {
         userRepository.delete(users);
     }
 
-    public List<UserResponseDTO> findAllPsych(Location location, Integer priceMin, Integer priceMax
+    public List<PsychologistResponseDTO> findAllPsych(Location location, Integer priceMin, Integer priceMax
             , Integer ratingMin, Integer ratingMax, Integer experienceMin, Integer experienceMax, Set<Categories> categories, String order) {
         logger.info("************* find All psychologists location={}  priceMin={} priceMax={} ratingMin={} ratingMax={} *************", location, priceMin, priceMax, ratingMin, ratingMax);
-        List<User> psychologists = userRepository.findAllPsych();
+        List<User> psychologists = userRepository.findAllPsych().stream().toList();
+        psychologists.forEach(System.out::println);
         if (location != Location.ALL) {
             psychologists = psychologists.stream()
                     .filter(psychologist -> psychologist.getLocation() == location)
                     .collect(Collectors.toList());
         }
         psychologists = selerctByCategories(psychologists, categories);
-        psychologists.forEach(p-> System.out.println(p.toString()));
         psychologists = psychologists.stream()
-                .filter(psychologist -> psychologist.getCard().getPrice() >= priceMin)
-                .filter(psychologist -> psychologist.getCard().getPrice() <= priceMax)
-                .filter(psychologist -> psychologist.getCard().getRating() >= ratingMin)
-                .filter(psychologist -> psychologist.getCard().getRating() <= ratingMax)
-                .filter(psychologist -> psychologist.getCard().getExperience() >= experienceMin)
-                .filter(psychologist -> psychologist.getCard().getExperience() <= experienceMax)
+                .filter(p -> p.getCard().getPrice() >= priceMin)
+                .filter(p -> p.getCard().getPrice() <= priceMax)
+                .filter(p -> p.getCard().getRating() >= ratingMin)
+                .filter(p -> p.getCard().getRating() <= ratingMax)
+                .filter(p -> p.getCard().getExperience() >= experienceMin)
+                .filter(p -> p.getCard().getExperience() <= experienceMax)
                 .collect(Collectors.toList());
-        psychologists.forEach(p-> System.out.println(p.toString()));
         if (order != null && order.equals("price")) {
             psychologists.sort(Comparator.comparing(psychologist -> psychologist.getCard().getPrice()));
         } else if (order != null && order.equals("rating")) {
@@ -81,7 +80,7 @@ public class UserService {
         } else {
             psychologists.sort(Comparator.comparing(User::getId));
         }
-        return psychologists.stream().map(userDTOMapper::userToUserResponseDTO).collect(Collectors.toList());
+        return psychologists.stream().map(PsychologistResponseDTO::toDTO).collect(Collectors.toList());
     }
 
     public List<User> selerctByCategories(List<User> psychologists, Set<Categories> categories) {

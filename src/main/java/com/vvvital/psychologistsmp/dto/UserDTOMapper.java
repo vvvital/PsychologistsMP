@@ -18,4 +18,6 @@ public interface UserDTOMapper {
 
     List<UserResponseDTO> usersToUserResponseDTO(List<User> users);
 
+    List<PsychologistResponseDTO> userToPsychologistResponseDTO(List<User> users);
+
 }
