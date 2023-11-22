@@ -57,7 +57,7 @@ public class UserService {
     public List<PsychologistResponseDTO> findAllPsych(Location location, Integer priceMin, Integer priceMax
             , Integer ratingMin, Integer ratingMax, Integer experienceMin, Integer experienceMax, Set<Categories> categories, String order) {
         logger.info("************* find All psychologists location={}  priceMin={} priceMax={} ratingMin={} ratingMax={} *************", location, priceMin, priceMax, ratingMin, ratingMax);
-        List<User> psychologists = userRepository.findAllPsych().stream().toList();
+        List<User> psychologists = userRepository.findAllPsych();
         psychologists.forEach(System.out::println);
         if (location != Location.ALL) {
             psychologists = psychologists.stream()
