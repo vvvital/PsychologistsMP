@@ -156,6 +156,7 @@ public class UserService {
         existingPsychologistCard.setPrice(cardDTO.getPrice());
         existingPsychologistCard.setRating(cardDTO.getRating());
         existingPsychologistCard.setExperience(cardDTO.getExperience());
+        existingPsychologistCard.setSpecialization(cardDTO.getSpecialization());
         existingPsychologistCard.setDescription(cardDTO.getDescription());
         existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
         existingPsychologistCard.setCategories(cardDTO.getCategories());
@@ -174,6 +175,9 @@ public class UserService {
         }
         if (cardDTO.getExperience() != null) {
             existingPsychologistCard.setExperience(cardDTO.getExperience());
+        }
+        if (cardDTO.getSpecialization() != null) {
+            existingPsychologistCard.setSpecialization(cardDTO.getSpecialization());
         }
         if (cardDTO.getDescription() != null) {
             existingPsychologistCard.setDescription(cardDTO.getDescription());
