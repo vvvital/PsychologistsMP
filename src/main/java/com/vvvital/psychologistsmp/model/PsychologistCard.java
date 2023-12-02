@@ -23,6 +23,8 @@ public class PsychologistCard {
     @Column
     private Integer experience;
     @Column
+    private String specialization;
+    @Column
     private String description;
     @Column
     private String photoLink;
@@ -32,10 +34,11 @@ public class PsychologistCard {
 //    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
 //    private User user;
 
-    public PsychologistCard(Integer price, Integer rating, Integer experience, String description, String photoLink,Set<Categories> categories) {
+    public PsychologistCard(Integer price, Integer rating, Integer experience, String specialization, String description, String photoLink,Set<Categories> categories) {
         this.price = price;
         this.rating = rating;
         this.experience = experience;
+        this.specialization = specialization;
         this.description = description;
         this.photoLink = photoLink;
         this.categories = categories;
@@ -64,6 +67,10 @@ public class PsychologistCard {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getSpecialization() {
+        return specialization;
     }
 
     public String getPhotoLink() {
@@ -100,6 +107,10 @@ public class PsychologistCard {
 
     public void setCategories(Set<Categories> categories) {
         this.categories = categories;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
     }
 
     @Override

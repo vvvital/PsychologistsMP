@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class PsychologistCardDTO {
     private Integer rating;
     private Integer experience;
     private String description;
+    private String specialization;
     private String photoLink;
     private Set<Categories> categories;
 
@@ -31,6 +33,7 @@ public class PsychologistCardDTO {
         card.setRating(dto.getRating());
         card.setExperience(dto.getExperience());
         card.setDescription(dto.getDescription());
+        card.setSpecialization(dto.getSpecialization());
         card.setPhotoLink(dto.getPhotoLink());
         card.setCategories(dto.getCategories());
         return card;
@@ -42,6 +45,7 @@ public class PsychologistCardDTO {
         dto.setRating(model.getRating());
         dto.setExperience(model.getExperience());
         dto.setDescription(model.getDescription());
+        dto.setSpecialization(model.getSpecialization());
         dto.setPhotoLink(model.getPhotoLink());
         dto.setCategories(model.getCategories());
         return dto;
@@ -56,7 +60,12 @@ public class PsychologistCardDTO {
     }
 
     public Integer getExperience() {
-        return experience;
+        LocalDate today = LocalDate.now();
+        int startYear = Integer.parseInt(String.valueOf(experience));
+        if (startYear > today.getYear()) {
+            throw new IllegalArgumentException("The start year must not be greater than the current year");
+        }
+        return today.getYear() - startYear;
     }
 
     public String getDescription() {
@@ -69,6 +78,10 @@ public class PsychologistCardDTO {
 
     public Set<Categories> getCategories() {
         return categories;
+    }
+
+    public String getSpecialization() {
+        return specialization;
     }
 
     public void setPrice(Integer price) {
@@ -89,6 +102,10 @@ public class PsychologistCardDTO {
 
     public void setPhotoLink(String photoLink) {
         this.photoLink = photoLink;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
     }
 
     public void setCategories(Set<Categories> categories) {
