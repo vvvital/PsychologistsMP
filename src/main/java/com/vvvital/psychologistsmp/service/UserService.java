@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,16 +24,20 @@ public class UserService {
 
     private final UserDTOMapper userDTOMapper;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(UserRepository userRepository, UserDTOMapper userDTOMapper, CardRepository cardRepository) {
+    public UserService(UserRepository userRepository, UserDTOMapper userDTOMapper, CardRepository cardRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userDTOMapper = userDTOMapper;
         this.cardRepository = cardRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     public User save(User user) {
         System.out.println("User service.save " + user.getRoles());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
