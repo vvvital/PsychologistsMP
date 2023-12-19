@@ -1,21 +1,21 @@
 package com.vvvital.psychologistsmp.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.validator.constraints.Email;
 
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "id_seq")
     @Column
-    @NonNull
     private Long id;
+
+    @NotBlank
     private String email;
     private String password;
     @Column
@@ -97,7 +97,7 @@ public class User {
         this.roles = role;
     }
 
-    public void setRoles(Role role){
+    public void setRole(Role role){
         this.roles.add(role);
     }
 
