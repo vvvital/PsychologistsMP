@@ -62,8 +62,8 @@ public class UserResponseDTO {
 
     public void setRole(Role role){roles.add(role);}
 
-    public Location getLocation() {
-        return location;
+    public String getLocation() {
+        return location.toString();
     }
 
     public void setLocation(Location location) {

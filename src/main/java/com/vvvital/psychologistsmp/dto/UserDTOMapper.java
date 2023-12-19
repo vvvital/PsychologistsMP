@@ -1,5 +1,6 @@
 package com.vvvital.psychologistsmp.dto;
 
+import com.vvvital.psychologistsmp.model.PsychologistCard;
 import com.vvvital.psychologistsmp.model.User;
 import org.mapstruct.Mapper;
 
@@ -20,4 +21,5 @@ public interface UserDTOMapper {
 
     List<PsychologistResponseDTO> userToPsychologistResponseDTO(List<User> users);
 
+    PsychologistCardResponseDTO cardToDTO(PsychologistCard card);
 }

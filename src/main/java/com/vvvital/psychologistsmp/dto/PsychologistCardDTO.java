@@ -71,6 +71,7 @@ public class PsychologistCardDTO {
     }
 
     public Set<Categories> getCategories() {
+
         return categories;
     }
 

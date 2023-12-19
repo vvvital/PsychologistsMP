@@ -1,6 +1,8 @@
 package com.vvvital.psychologistsmp.dto;
 
 import com.vvvital.psychologistsmp.model.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
 
@@ -72,11 +74,10 @@ public class PsychologistResponseDTO {
         return roles;
     }
 
-    public Location getLocation() {
-        return location;
+    public String getLocation() {
+        return location.toString();
     }
 
-    public PsychologistCard getCard() {
-        return card;
+    public PsychologistCardResponseDTO getCard() { return PsychologistCardResponseDTO.toDTO(card);
     }
 }
