@@ -2,17 +2,11 @@ package com.vvvital.psychologistsmp.dto;
 
 import com.vvvital.psychologistsmp.model.Categories;
 import com.vvvital.psychologistsmp.model.PsychologistCard;
-import com.vvvital.psychologistsmp.model.User;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 //@Getter
 //@Setter
@@ -111,6 +105,7 @@ public class PsychologistCardDTO {
     public void setCategories(Set<Categories> categories) {
         this.categories=categories;
     }
+
 }
 
 

@@ -10,7 +10,7 @@ public interface UserDTOMapper {
 
     UserResponseDTO userToUserResponseDTO(User user);
 
-    User responseDTOToUser(UserResponseDTO dto);
+    //User responseDTOToUser(UserResponseDTO dto);
 
     UserRequestDTO userToUserRequestDTO(User user);
 

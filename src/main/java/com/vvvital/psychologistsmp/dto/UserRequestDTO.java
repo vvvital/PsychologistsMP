@@ -2,6 +2,7 @@ package com.vvvital.psychologistsmp.dto;
 
 import com.vvvital.psychologistsmp.model.Location;
 import com.vvvital.psychologistsmp.model.Role;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class UserRequestDTO {
 
+    @Email
     private String email;
     private String password;
     private String firstName;
