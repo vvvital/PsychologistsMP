@@ -1,15 +1,12 @@
 package com.vvvital.psychologistsmp.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-//@NoArgsConstructor
 @Table(name = "card")
 public class PsychologistCard {
     @Id

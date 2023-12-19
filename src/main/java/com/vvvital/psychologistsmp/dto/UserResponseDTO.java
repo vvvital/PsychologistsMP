@@ -60,8 +60,10 @@ public class UserResponseDTO {
         this.roles = roles;
     }
 
-    public Location getLocation() {
-        return location;
+    public void setRole(Role role){roles.add(role);}
+
+    public String getLocation() {
+        return location.toString();
     }
 
     public void setLocation(Location location) {

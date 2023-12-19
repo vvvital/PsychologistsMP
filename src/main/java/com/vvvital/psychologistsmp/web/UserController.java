@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -96,49 +97,69 @@ public class UserController {
 
     @DeleteMapping("/delete/{email}")
     @Operation(summary = "Delete user")
-    public ResponseEntity<User> delete(@Parameter(description = "User's email") @PathVariable String email) {
+    public ResponseEntity<?> delete(@Parameter(description = "User's email") @PathVariable String email, Principal principal) throws Exception {
         logger.info("********* find by email {}", email);
         User user = userService.findByEmail(email);
-        userService.deleteUser(email);
+        try {
+            userService.deleteUser(email, principal);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         return ResponseEntity.ok(user);
 
     }
 
-    @PutMapping("/{id}/general-information")
+    @PutMapping("/{email}/general-information")
     @Operation(summary = "Update general information",
             description = "Update ALL variables a general user information by specifying it's id user. The response is user with id, email, first name, last name, location and role.")
-    public ResponseEntity<UserResponseDTO> updateGeneralInformation(@Parameter(description = "User's id") @PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
-        User updatedUser = userService.updateGeneralInformation(id, userRequestDTO);
-        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(updatedUser);
-        return ResponseEntity.ok(responseDTO);
+    public ResponseEntity<?> updateGeneralInformation(@Parameter(description = "User's email") @PathVariable String email, @RequestBody UserRequestDTO userRequestDTO, Principal principal) {
+        try {
+            User updatedUser = userService.updateGeneralInformation(email, userRequestDTO, principal);
+            UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(updatedUser);
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @PatchMapping("/{id}/general-information")
+    @PatchMapping("/{email}/general-information")
     @Operation(summary = "Update general information",
             description = "Update SOME variables a general user information by specifying it's id user. The response is user with id, email, first name, last name, location and role.")
-    public ResponseEntity<UserResponseDTO> patchGeneralInformation(@Parameter(description = "User's id") @PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
-        User patchedUser = userService.patchGeneralInformation(id, userRequestDTO);
-        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(patchedUser);
-        return ResponseEntity.ok(responseDTO);
+    public ResponseEntity<?> patchGeneralInformation(@Parameter(description = "User's email") @PathVariable String email, @RequestBody UserRequestDTO userRequestDTO, Principal principal) {
+        try {
+            User patchedUser = userService.patchGeneralInformation(email, userRequestDTO, principal);
+            UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(patchedUser);
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}/psychologist-card")
     @Operation(summary = "Update psychologist card",
             description = "Update ALL variables a psychologist card by specifying it's id. The response is psychologist card with price, rating, experience, description, photoLink and categories."
     )
-    public ResponseEntity<PsychologistCardDTO> updatePsychologistCard(@Parameter(description = "Psychologist's card id") @PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO) {
-        PsychologistCard updatePsychologistCard = userService.updatePsychologistCard(id, cardDTO);
-        PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(updatePsychologistCard);
-        return ResponseEntity.ok(responseDTO);
+    public ResponseEntity<?> updatePsychologistCard(@Parameter(description = "Psychologist's card id") @PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO, Principal principal) {
+        try {
+            PsychologistCard updatePsychologistCard = userService.updatePsychologistCard(id, cardDTO, principal);
+            PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(updatePsychologistCard);
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PatchMapping("/{id}/psychologist-card")
     @Operation(summary = "Update psychologist card",
             description = "Update SOME variables a psychologist card by specifying it's id. The response is psychologist card with price, rating, experience, description, photoLink and categories.")
-    public ResponseEntity<PsychologistCardDTO> patchPsychologistCard(@Parameter(description = "Psychologist's card id") @PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO) {
-        PsychologistCard patchedPsychologistCard = userService.patchPsychologistCard(id, cardDTO);
-        PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(patchedPsychologistCard);
-        return ResponseEntity.ok(responseDTO);
+    public ResponseEntity<?> patchPsychologistCard(@Parameter(description = "Psychologist's card id") @PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO, Principal principal) {
+        try {
+            PsychologistCard patchedPsychologistCard = userService.patchPsychologistCard(id, cardDTO, principal);
+            PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(patchedPsychologistCard);
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     public Integer strToInt(String str) {

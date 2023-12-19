@@ -5,13 +5,20 @@ import com.vvvital.psychologistsmp.model.*;
 import com.vvvital.psychologistsmp.repository.CardRepository;
 import com.vvvital.psychologistsmp.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jdk.jshell.spi.ExecutionControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,9 +61,13 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteUser(String email) {
-        User users = findByEmail(email);
-        userRepository.delete(users);
+    public void deleteUser(String email, Principal principal) throws Exception {
+        if (principal.getName().equals(email)) {
+            User users = findByEmail(email);
+            userRepository.delete(users);
+        } else {
+            throw new IllegalStateException(" Violation of access rights");
+        }
     }
 
     public List<PsychologistResponseDTO> findAllPsych(Location location, Integer priceMin, Integer priceMax
@@ -102,47 +113,55 @@ public class UserService {
         return psychologists;
     }
 
-    public User updateGeneralInformation(Long id, UserRequestDTO userRequestDTO) {
-        User existingGeneralInformation = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+    public User updateGeneralInformation(String email, UserRequestDTO userRequestDTO, Principal principal) throws Exception {
+        if (principal.getName().equals(email)) {
+            User existingGeneralInformation = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
 
-        existingGeneralInformation.setEmail(userRequestDTO.getEmail());
-        existingGeneralInformation.setPassword(userRequestDTO.getPassword());
-        existingGeneralInformation.setFirstName(userRequestDTO.getFirstName());
-        existingGeneralInformation.setLastName(userRequestDTO.getLastName());
-        existingGeneralInformation.setRoles(userRequestDTO.getRoles());
-        existingGeneralInformation.setLocation(userRequestDTO.getLocation());
+            existingGeneralInformation.setEmail(userRequestDTO.getEmail());
+            existingGeneralInformation.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+            existingGeneralInformation.setFirstName(userRequestDTO.getFirstName());
+            existingGeneralInformation.setLastName(userRequestDTO.getLastName());
+            existingGeneralInformation.setRoles(userRequestDTO.getRoles());
+            existingGeneralInformation.setLocation(userRequestDTO.getLocation());
 
-        return userRepository.save(existingGeneralInformation);
+            return userRepository.save(existingGeneralInformation);
+        } else {
+            throw new IllegalStateException(" Violation of access rights");
+        }
     }
 
-    public User patchGeneralInformation(Long id, UserRequestDTO userRequestDTO) {
-        User existingGeneralInformation = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+    public User patchGeneralInformation(String email, UserRequestDTO userRequestDTO, Principal principal) throws Exception {
+        if (principal.getName().equals(email)) {
+            User existingGeneralInformation = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
 
-        if (userRequestDTO.getEmail() != null) {
-            existingGeneralInformation.setEmail(userRequestDTO.getEmail());
-        }
-        if (userRequestDTO.getPassword() != null) {
-            existingGeneralInformation.setPassword(userRequestDTO.getPassword());
-        }
-        if (userRequestDTO.getFirstName() != null) {
-            existingGeneralInformation.setFirstName(userRequestDTO.getFirstName());
-        }
-        if (userRequestDTO.getLastName() != null) {
-            existingGeneralInformation.setLastName(userRequestDTO.getLastName());
-        }
-        if (userRequestDTO.getRoles() != null) {
-            existingGeneralInformation.setRoles(userRequestDTO.getRoles());
-        }
-        if (userRequestDTO.getLocation() != null) {
-            existingGeneralInformation.setLocation(userRequestDTO.getLocation());
-        }
+            if (userRequestDTO.getEmail() != null) {
+                existingGeneralInformation.setEmail(userRequestDTO.getEmail());
+            }
+            if (userRequestDTO.getPassword() != null) {
+                existingGeneralInformation.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+            }
+            if (userRequestDTO.getFirstName() != null) {
+                existingGeneralInformation.setFirstName(userRequestDTO.getFirstName());
+            }
+            if (userRequestDTO.getLastName() != null) {
+                existingGeneralInformation.setLastName(userRequestDTO.getLastName());
+            }
+            if (userRequestDTO.getRoles() != null) {
+                existingGeneralInformation.setRoles(userRequestDTO.getRoles());
+            }
+            if (userRequestDTO.getLocation() != null) {
+                existingGeneralInformation.setLocation(userRequestDTO.getLocation());
+            }
 
-        return userRepository.save(existingGeneralInformation);
+            return userRepository.save(existingGeneralInformation);
+        } else {
+            throw new IllegalStateException(" Violation of access rights");
+        }
     }
 
     public User becomePsychologist(Long id, PsychologistCardDTO card) {
         User currentUser = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
-        currentUser.setRoles(Role.PSYCHOLOGIST);
+        currentUser.setRole(Role.PSYCHOLOGIST);
 //        if (userRequestDTO.getRoles() != null) {
 //            currentUser.setRoles(userRequestDTO.getRoles());
 //        }
@@ -155,45 +174,55 @@ public class UserService {
         return userRepository.save(currentUser);
     }
 
-    public PsychologistCard updatePsychologistCard(Long id, PsychologistCardDTO cardDTO) {
-        PsychologistCard existingPsychologistCard = cardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+    public PsychologistCard updatePsychologistCard(Long id, PsychologistCardDTO cardDTO, Principal principal) throws Exception {
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if (user.getCard().getId() == null || user.getCard().getId() != id) {
+            throw new IllegalStateException(" Violation of access rights");
+        } else {
+            PsychologistCard existingPsychologistCard = cardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
-        existingPsychologistCard.setPrice(cardDTO.getPrice());
-        existingPsychologistCard.setRating(cardDTO.getRating());
-        existingPsychologistCard.setExperience(cardDTO.getExperience());
-        existingPsychologistCard.setSpecialization(cardDTO.getSpecialization());
-        existingPsychologistCard.setDescription(cardDTO.getDescription());
-        existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
-        existingPsychologistCard.setCategories(cardDTO.getCategories());
+            existingPsychologistCard.setPrice(cardDTO.getPrice());
+            existingPsychologistCard.setRating(cardDTO.getRating());
+            existingPsychologistCard.setExperience(cardDTO.getExperience());
+            existingPsychologistCard.setSpecialization(cardDTO.getSpecialization());
+            existingPsychologistCard.setDescription(cardDTO.getDescription());
+            existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
+            existingPsychologistCard.setCategories(cardDTO.getCategories());
 
-        return cardRepository.save(existingPsychologistCard);
+            return cardRepository.save(existingPsychologistCard);
+        }
     }
 
-    public PsychologistCard patchPsychologistCard(Long id, PsychologistCardDTO cardDTO) {
-        PsychologistCard existingPsychologistCard = cardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+    public PsychologistCard patchPsychologistCard(Long id, PsychologistCardDTO cardDTO, Principal principal) throws Exception {
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if (user.getCard().getId()==null || user.getCard().getId() != id) {
+            throw new IllegalStateException(" Violation of access rights");
+        } else {
+            PsychologistCard existingPsychologistCard = cardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
-        if (cardDTO.getPrice() != null) {
-            existingPsychologistCard.setPrice(cardDTO.getPrice());
-        }
-        if (cardDTO.getRating() != null) {
-            existingPsychologistCard.setRating(cardDTO.getRating());
-        }
-        if (cardDTO.getExperience() != null) {
-            existingPsychologistCard.setExperience(cardDTO.getExperience());
-        }
-        if (cardDTO.getSpecialization() != null) {
-            existingPsychologistCard.setSpecialization(cardDTO.getSpecialization());
-        }
-        if (cardDTO.getDescription() != null) {
-            existingPsychologistCard.setDescription(cardDTO.getDescription());
-        }
-        if (cardDTO.getPhotoLink() != null) {
-            existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
-        }
-        if (cardDTO.getCategories() != null) {
-            existingPsychologistCard.setCategories(cardDTO.getCategories());
-        }
+            if (cardDTO.getPrice() != null) {
+                existingPsychologistCard.setPrice(cardDTO.getPrice());
+            }
+            if (cardDTO.getRating() != null) {
+                existingPsychologistCard.setRating(cardDTO.getRating());
+            }
+            if (cardDTO.getExperience() != null) {
+                existingPsychologistCard.setExperience(cardDTO.getExperience());
+            }
+            if (cardDTO.getSpecialization() != null) {
+                existingPsychologistCard.setSpecialization(cardDTO.getSpecialization());
+            }
+            if (cardDTO.getDescription() != null) {
+                existingPsychologistCard.setDescription(cardDTO.getDescription());
+            }
+            if (cardDTO.getPhotoLink() != null) {
+                existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
+            }
+            if (cardDTO.getCategories() != null) {
+                existingPsychologistCard.setCategories(cardDTO.getCategories());
+            }
 
-        return cardRepository.save(existingPsychologistCard);
+            return cardRepository.save(existingPsychologistCard);
+        }
     }
 }
