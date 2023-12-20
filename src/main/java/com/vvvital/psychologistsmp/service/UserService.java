@@ -99,6 +99,10 @@ public class UserService {
         return psychologists.stream().map(PsychologistResponseDTO::toDTO).collect(Collectors.toList());
     }
 
+    public User getById(Long id){
+        return userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("User not found with id = "+id));
+    }
+
     public List<User> selerctByCategories(List<User> psychologists, Set<Categories> categories) {
         List<User> psychologistList = new ArrayList<>();
         if (categories != null && !categories.isEmpty()) {
