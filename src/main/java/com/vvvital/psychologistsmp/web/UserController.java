@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.Utilities;
@@ -97,12 +99,13 @@ public class UserController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<PsychologistResponseDTO> get(@PathVariable Long id){
-        User psychologist= userService.getById(id);
-        if (psychologist!=null){
-            return ResponseEntity.ok(userDTOMapper.userToPsychologistResponseDTO(List.of(psychologist)).get(0));
-        }else {
-            return null;
+    @Operation(summary = "Get psychologist by Id")
+    public ResponseEntity<?> get(@PathVariable Long id) {
+        try {
+            User psychologist = userService.getById(id);
+            return ResponseEntity.ok(DataAccessUtils.singleResult(userDTOMapper.userToPsychologistResponseDTO(List.of(psychologist))));
+        }catch (UsernameNotFoundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -171,6 +174,18 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/locations")
+    @Operation(summary = "Get list of all locations")
+    public List<String> getLocation(){
+        return Arrays.stream(Location.values()).toList().stream().map(Location::name).sorted().collect(Collectors.toList());
+    }
+
+    @GetMapping("/categories")
+    @Operation(summary = "Get list of all categories")
+    public List<Categories> getCategories(){
+        return Arrays.stream(Categories.values()).sorted().collect(Collectors.toList());
     }
 
     public Integer strToInt(String str) {

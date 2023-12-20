@@ -33,7 +33,8 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.init(http))
                 .authorizeHttpRequests(request->request
                         .requestMatchers(HttpMethod.POST,"/api/users/save").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/users/all/psychologist","/api/users/get/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/users/all/psychologist","/api/users/get/**"
+                        ,"/api/users/locations","/api/users/categories").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/swagger-ui/index.html#").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/").permitAll()
