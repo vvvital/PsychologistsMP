@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.Utilities;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
@@ -93,6 +94,16 @@ public class UserController {
         }
         return ResponseEntity.ok(userService.findAllPsych(Location.valueOf(location), strToInt(priceMin), strToInt(priceMax)
                 , strToInt(ratingMin), strToInt(ratingMax), strToInt(experienceMin), strToInt(experienceMax), categoriesSet, order));
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<PsychologistResponseDTO> get(@PathVariable Long id){
+        User psychologist= userService.getById(id);
+        if (psychologist!=null){
+            return ResponseEntity.ok(userDTOMapper.userToPsychologistResponseDTO(List.of(psychologist)).get(0));
+        }else {
+            return null;
+        }
     }
 
     @DeleteMapping("/delete/{email}")
