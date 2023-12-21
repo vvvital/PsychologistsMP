@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -28,8 +29,6 @@ public class PsychologistCard {
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Categories> categories;
-//    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-//    private User user;
 
     public PsychologistCard(Integer price, Integer rating, Integer experience, String specialization, String description, String photoLink,Set<Categories> categories) {
         this.price = price;
@@ -59,7 +58,12 @@ public class PsychologistCard {
     }
 
     public Integer getExperience() {
-        return experience;
+        LocalDate today = LocalDate.now();
+        int startYear = Integer.parseInt(String.valueOf(experience));
+        if (startYear > today.getYear()) {
+            throw new IllegalArgumentException("The start year must not be greater than the current year");
+        }
+        return today.getYear() - startYear;
     }
 
     public String getDescription() {
