@@ -21,8 +21,8 @@ public class PsychologistCardResponseDTO {
     private String photoLink;
     private Set<Categories> categories;
 
-    public Set<String>getCategories(){
-        return categories.stream().map(Categories::toString).collect(Collectors.toSet());
+    public Set<Categories>getCategories(){
+        return categories;
     }
 
     public Integer getPrice() {

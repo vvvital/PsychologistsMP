@@ -1,6 +1,9 @@
 package com.vvvital.psychologistsmp.web;
 
-import com.vvvital.psychologistsmp.dto.*;
+import com.vvvital.psychologistsmp.dto.PsychologistCardDTO;
+import com.vvvital.psychologistsmp.dto.PsychologistResponseDTO;
+import com.vvvital.psychologistsmp.dto.UserDTOMapper;
+import com.vvvital.psychologistsmp.dto.UserResponseDTO;
 import com.vvvital.psychologistsmp.model.Categories;
 import com.vvvital.psychologistsmp.model.Location;
 import com.vvvital.psychologistsmp.model.PsychologistCard;
@@ -11,7 +14,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -74,7 +76,7 @@ public class PsychologistController {
     public ResponseEntity<?> get(@PathVariable Long id) {
         try {
             User psychologist = userService.getById(id);
-            return ResponseEntity.ok(DataAccessUtils.singleResult(userDTOMapper.userToPsychologistResponseDTO(List.of(psychologist))));
+            return ResponseEntity.ok(PsychologistResponseDTO.toDTO(psychologist));
         }catch (UsernameNotFoundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
