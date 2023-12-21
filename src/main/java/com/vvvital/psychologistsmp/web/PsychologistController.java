@@ -37,27 +37,28 @@ public class PsychologistController {
         this.userDTOMapper = userDTOMapper;
     }
 
-
     @PostMapping("/save/{id}")
     @Operation(summary = "To become a psychologist",
             description = "User becomes a psychologist by id and add a psychologist card.")
-    public ResponseEntity<PsychologistResponseDTO> becomePsychologist(@Parameter(description = "User's id") @PathVariable Long id,
-                                                              @RequestBody PsychologistCardDTO card) {
-        User becomePsychologist = psychologistService.becomePsychologist(id, card);
-        PsychologistResponseDTO responseDTO = PsychologistResponseDTO.toDTO(becomePsychologist);
-        return ResponseEntity.ok(responseDTO);
+    public ResponseEntity<?> becomePsychologist(@Parameter(description = "User's id") @PathVariable Long id,
+                                                @RequestBody PsychologistCardDTO card, Principal principal) {
+        try {
+            return ResponseEntity.ok(psychologistService.becomePsychologist(id, card, principal));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/all")
     @Operation(summary = "Get all psychologists")
     public ResponseEntity<List<PsychologistResponseDTO>> findAllPsychologist(
             @RequestParam(required = false, defaultValue = "ALL") String location,
-            @RequestParam(required = false, defaultValue = "0") String priceMin,
-            @RequestParam(required = false, defaultValue = "99999") String priceMax,
-            @RequestParam(required = false, defaultValue = "0") String ratingMin,
-            @RequestParam(required = false, defaultValue = "5") String ratingMax,
-            @RequestParam(required = false, defaultValue = "0") String experienceMin,
-            @RequestParam(required = false, defaultValue = "99") String experienceMax,
+            @RequestParam(required = false, defaultValue = "0") Integer priceMin,
+            @RequestParam(required = false, defaultValue = "99999") Integer priceMax,
+            @RequestParam(required = false, defaultValue = "0") Integer ratingMin,
+            @RequestParam(required = false, defaultValue = "5") Integer ratingMax,
+            @RequestParam(required = false, defaultValue = "0") Integer experienceMin,
+            @RequestParam(required = false, defaultValue = "99") Integer experienceMax,
             @RequestParam(required = false) String[] categories,
             @RequestParam(required = false) String order
     ) {
@@ -66,21 +67,19 @@ public class PsychologistController {
         if (categories != null) {
             categoriesSet = Arrays.stream(categories).map(Categories::valueOf).collect(Collectors.toSet());
         }
-        return ResponseEntity.ok(psychologistService.findAllPsych(Location.valueOf(location), strToInt(priceMin), strToInt(priceMax)
-                , strToInt(ratingMin), strToInt(ratingMax), strToInt(experienceMin), strToInt(experienceMax), categoriesSet, order));
+        return ResponseEntity.ok(psychologistService.findAllPsych(Location.valueOf(location), priceMin, priceMax
+                , ratingMin, ratingMax, experienceMin, experienceMax, categoriesSet, order));
     }
 
     @GetMapping("/get/{id}")
     @Operation(summary = "Get psychologist by Id")
     public ResponseEntity<?> get(@PathVariable Long id) {
         try {
-            User psychologist = psychologistService.getById(id);
-            return ResponseEntity.ok(PsychologistResponseDTO.toDTO(psychologist));
-        }catch (UsernameNotFoundException e){
+            return ResponseEntity.ok(psychologistService.getById(id));
+        } catch (UsernameNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 
     @PutMapping("/{id}/psychologist-card")
     @Operation(summary = "Update psychologist card",
@@ -88,9 +87,7 @@ public class PsychologistController {
     )
     public ResponseEntity<?> updatePsychologistCard(@Parameter(description = "Psychologist's card id") @PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO, Principal principal) {
         try {
-            PsychologistCard updatePsychologistCard = psychologistService.updatePsychologistCard(id, cardDTO, principal);
-            PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(updatePsychologistCard);
-            return ResponseEntity.ok(responseDTO);
+            return ResponseEntity.ok(psychologistService.updatePsychologistCard(id, cardDTO, principal));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -101,19 +98,9 @@ public class PsychologistController {
             description = "Update SOME variables a psychologist card by specifying it's id. The response is psychologist card with price, rating, experience, description, photoLink and categories.")
     public ResponseEntity<?> patchPsychologistCard(@Parameter(description = "Psychologist's card id") @PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO, Principal principal) {
         try {
-            PsychologistCard patchedPsychologistCard = psychologistService.patchPsychologistCard(id, cardDTO, principal);
-            PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(patchedPsychologistCard);
-            return ResponseEntity.ok(responseDTO);
+            return ResponseEntity.ok(psychologistService.patchPsychologistCard(id, cardDTO, principal));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    public Integer strToInt(String str) {
-        try {
-            return Integer.parseInt(str);
-        } catch (NumberFormatException exception) {
-            return 0;
         }
     }
 }

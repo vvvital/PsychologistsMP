@@ -35,8 +35,11 @@ public class PsychologistService {
         this.cardRepository = cardRepository;
     }
 
-    public User becomePsychologist(Long id, PsychologistCardDTO card) {
+    public PsychologistResponseDTO becomePsychologist(Long id, PsychologistCardDTO card, Principal principal) throws IllegalAccessException {
         User currentUser = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+        if (!currentUser.getEmail().equals(principal.getName())){
+            throw new IllegalAccessException(" Violation of access rights");
+        }
         currentUser.setRole(Role.PSYCHOLOGIST);
         if (currentUser.getCard() != null) {
             throw new IllegalStateException("User already has a psychologist card");
@@ -44,11 +47,16 @@ public class PsychologistService {
             PsychologistCard psychologistCard = PsychologistCardDTO.toModel(card);
             currentUser.setCard(psychologistCard);
         }
-        return userRepository.save(currentUser);
+        return PsychologistResponseDTO.toDTO(userRepository.save(currentUser));
     }
 
-    public User getById(Long id) throws UsernameNotFoundException {
-        return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Psychologist not found with id = " + id));
+    public PsychologistResponseDTO getById(Long id) throws UsernameNotFoundException {
+        User psychologist = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Psychologist not found with id = " + id));
+        if (!psychologist.getRoles().contains(Role.PSYCHOLOGIST)||psychologist.getCard()==null){
+            throw new UsernameNotFoundException("This user isn't psychologist");
+        }
+        return PsychologistResponseDTO.toDTO(psychologist);
     }
 
     public List<PsychologistResponseDTO> findAllPsych(Location location, Integer priceMin, Integer priceMax
@@ -81,7 +89,7 @@ public class PsychologistService {
     }
 
 
-    public PsychologistCard updatePsychologistCard(Long id, PsychologistCardDTO cardDTO, Principal principal) throws Exception {
+    public PsychologistCardDTO updatePsychologistCard(Long id, PsychologistCardDTO cardDTO, Principal principal) throws Exception {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (user.getCard().getId() == null || user.getCard().getId() != id) {
             throw new IllegalStateException(" Violation of access rights");
@@ -96,14 +104,14 @@ public class PsychologistService {
             existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
             existingPsychologistCard.setCategories(cardDTO.getCategories());
 
-            return cardRepository.save(existingPsychologistCard);
+            return PsychologistCardDTO.toDTO(cardRepository.save(existingPsychologistCard));
         }
     }
 
-    public PsychologistCard patchPsychologistCard(Long id, PsychologistCardDTO cardDTO, Principal principal) throws Exception {
+    public PsychologistCardDTO patchPsychologistCard(Long id, PsychologistCardDTO cardDTO, Principal principal) throws Exception {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (user.getCard().getId() == null || user.getCard().getId() != id) {
-            throw new IllegalStateException(" Violation of access rights");
+            throw new IllegalAccessException(" Violation of access rights");
         } else {
             PsychologistCard existingPsychologistCard = cardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
@@ -129,7 +137,7 @@ public class PsychologistService {
                 existingPsychologistCard.setCategories(cardDTO.getCategories());
             }
 
-            return cardRepository.save(existingPsychologistCard);
+            return PsychologistCardDTO.toDTO(cardRepository.save(existingPsychologistCard));
         }
     }
 
