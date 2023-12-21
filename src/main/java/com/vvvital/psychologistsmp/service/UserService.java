@@ -100,7 +100,7 @@ public class UserService {
     }
 
     public User getById(Long id) throws UsernameNotFoundException{
-        return userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("User not found with id = "+id));
+        return userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("Psychologist not found with id = "+id));
     }
 
     public List<User> selerctByCategories(List<User> psychologists, Set<Categories> categories) {
