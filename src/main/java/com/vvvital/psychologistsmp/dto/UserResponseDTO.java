@@ -9,8 +9,6 @@ import lombok.Setter;
 
 import java.util.Set;
 
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserResponseDTO {
 
     private Long id;

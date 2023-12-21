@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.Utilities;
@@ -43,15 +45,6 @@ public class UserController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PostMapping("/save/{id}/psychologist/")
-    @Operation(summary = "To become a psychologist",
-            description = "User becomes a psychologist by id and add a psychologist card.")
-    public ResponseEntity<UserResponseDTO> becomePsychologist(@Parameter(description = "User's id") @PathVariable Long id,
-                                                              @RequestBody PsychologistCardDTO card) {
-        User becomePsychologist = userService.becomePsychologist(id, card);
-        UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(becomePsychologist);
-        return ResponseEntity.ok(responseDTO);
-    }
 
     @GetMapping("/email/{email}")
     @Operation(summary = "Get user by email")
@@ -72,38 +65,6 @@ public class UserController {
         logger.info("******************* users/all ****************");
         List<UserResponseDTO> responseDTOs = userService.findAll();
         return ResponseEntity.ok(responseDTOs);
-    }
-
-    @GetMapping("/all/psychologist")
-    @Operation(summary = "Get all psychologists")
-    public ResponseEntity<List<PsychologistResponseDTO>> findAllPsychologist(
-            @RequestParam(required = false, defaultValue = "ALL") String location,
-            @RequestParam(required = false, defaultValue = "0") String priceMin,
-            @RequestParam(required = false, defaultValue = "99999") String priceMax,
-            @RequestParam(required = false, defaultValue = "0") String ratingMin,
-            @RequestParam(required = false, defaultValue = "5") String ratingMax,
-            @RequestParam(required = false, defaultValue = "0") String experienceMin,
-            @RequestParam(required = false, defaultValue = "99") String experienceMax,
-            @RequestParam(required = false) String[] categories,
-            @RequestParam(required = false) String order
-    ) {
-        logger.info("************* find All psychologists priceMin={} priceMax={} ratingMin={} ratingMax={} *************", priceMin, priceMax, ratingMin, ratingMax);
-        Set<Categories> categoriesSet = null;
-        if (categories != null) {
-            categoriesSet = Arrays.stream(categories).map(Categories::valueOf).collect(Collectors.toSet());
-        }
-        return ResponseEntity.ok(userService.findAllPsych(Location.valueOf(location), strToInt(priceMin), strToInt(priceMax)
-                , strToInt(ratingMin), strToInt(ratingMax), strToInt(experienceMin), strToInt(experienceMax), categoriesSet, order));
-    }
-
-    @GetMapping("/get/{id}")
-    public ResponseEntity<PsychologistResponseDTO> get(@PathVariable Long id){
-        User psychologist= userService.getById(id);
-        if (psychologist!=null){
-            return ResponseEntity.ok(userDTOMapper.userToPsychologistResponseDTO(List.of(psychologist)).get(0));
-        }else {
-            return null;
-        }
     }
 
     @DeleteMapping("/delete/{email}")
@@ -146,39 +107,17 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}/psychologist-card")
-    @Operation(summary = "Update psychologist card",
-            description = "Update ALL variables a psychologist card by specifying it's id. The response is psychologist card with price, rating, experience, description, photoLink and categories."
-    )
-    public ResponseEntity<?> updatePsychologistCard(@Parameter(description = "Psychologist's card id") @PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO, Principal principal) {
-        try {
-            PsychologistCard updatePsychologistCard = userService.updatePsychologistCard(id, cardDTO, principal);
-            PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(updatePsychologistCard);
-            return ResponseEntity.ok(responseDTO);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
+    @GetMapping("/locations")
+    @Operation(summary = "Get list of all locations")
+    public List<String> getLocation(){
+        return Arrays.stream(Location.values()).toList().stream().map(Location::name).sorted().collect(Collectors.toList());
     }
 
-    @PatchMapping("/{id}/psychologist-card")
-    @Operation(summary = "Update psychologist card",
-            description = "Update SOME variables a psychologist card by specifying it's id. The response is psychologist card with price, rating, experience, description, photoLink and categories.")
-    public ResponseEntity<?> patchPsychologistCard(@Parameter(description = "Psychologist's card id") @PathVariable Long id, @RequestBody PsychologistCardDTO cardDTO, Principal principal) {
-        try {
-            PsychologistCard patchedPsychologistCard = userService.patchPsychologistCard(id, cardDTO, principal);
-            PsychologistCardDTO responseDTO = PsychologistCardDTO.toDTO(patchedPsychologistCard);
-            return ResponseEntity.ok(responseDTO);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    public Integer strToInt(String str) {
-        try {
-            return Integer.parseInt(str);
-        } catch (NumberFormatException exception) {
-            return 0;
-        }
+    @GetMapping("/categories")
+    @Operation(summary = "Get list of all categories")
+    public List<Categories> getCategories(){
+        return Arrays.stream(Categories.values()).sorted().collect(Collectors.toList());
     }
 }
 
