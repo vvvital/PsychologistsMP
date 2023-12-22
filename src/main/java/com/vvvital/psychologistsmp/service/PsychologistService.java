@@ -3,16 +3,25 @@ package com.vvvital.psychologistsmp.service;
 import com.vvvital.psychologistsmp.dto.PsychologistCardDTO;
 import com.vvvital.psychologistsmp.dto.PsychologistResponseDTO;
 import com.vvvital.psychologistsmp.dto.UserDTOMapper;
+import com.vvvital.psychologistsmp.exception.BadRequestException;
+import com.vvvital.psychologistsmp.exception.GCPFileUploadException;
 import com.vvvital.psychologistsmp.model.*;
 import com.vvvital.psychologistsmp.repository.CardRepository;
 import com.vvvital.psychologistsmp.repository.UserRepository;
+import com.vvvital.psychologistsmp.util.DataBucketUtil;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -21,6 +30,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class PsychologistService {
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -28,11 +39,14 @@ public class PsychologistService {
     private final CardRepository cardRepository;
     private final UserDTOMapper userDTOMapper;
 
+    private final DataBucketUtil dataBucketUtil;
+
     @Autowired
-    public PsychologistService(UserRepository userRepository, UserDTOMapper userDTOMapper, CardRepository cardRepository) {
+    public PsychologistService(UserRepository userRepository, UserDTOMapper userDTOMapper, CardRepository cardRepository, DataBucketUtil dataBucketUtil) {
         this.userRepository = userRepository;
         this.userDTOMapper = userDTOMapper;
         this.cardRepository = cardRepository;
+        this.dataBucketUtil = dataBucketUtil;
     }
 
     public PsychologistResponseDTO becomePsychologist(Long id, PsychologistCardDTO card, Principal principal) throws IllegalAccessException {
@@ -69,7 +83,7 @@ public class PsychologistService {
                     .filter(psychologist -> psychologist.getLocation() == location)
                     .collect(Collectors.toList());
         }
-        psychologists = selerctByCategories(psychologists, categories);
+        psychologists = selectByCategories(psychologists, categories);
         psychologists = psychologists.stream()
                 .filter(p -> p.getCard().getPrice() >= priceMin)
                 .filter(p -> p.getCard().getPrice() <= priceMax)
@@ -141,7 +155,34 @@ public class PsychologistService {
         }
     }
 
-    public List<User> selerctByCategories(List<User> psychologists, Set<Categories> categories) {
+    public void uploadProfileImage(Long id, MultipartFile file) {
+        PsychologistCard psychologistCard = cardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Card not found with id: " + id));
+
+        logger.debug("Start file uploading service");
+
+        String originalFileName = file.getOriginalFilename();
+        if (originalFileName == null) {
+            throw new BadRequestException("Original file name is null");
+        }
+        Path path = new File(originalFileName).toPath();
+
+        try {
+            String contentType = Files.probeContentType(path);
+            String fileUrl = dataBucketUtil.uploadFile(file, originalFileName, contentType);
+
+            psychologistCard.setPhotoLink(fileUrl);
+            cardRepository.save(psychologistCard);
+
+            logger.debug("File uploaded successfully, url: {}", fileUrl);
+
+        } catch (Exception e) {
+            logger.error("Error occurred while uploading. Error: ", e);
+            throw new GCPFileUploadException("Error occurred while uploading");
+        }
+    }
+
+    public List<User> selectByCategories(List<User> psychologists, Set<Categories> categories) {
         List<User> psychologistList = new ArrayList<>();
         if (categories != null && !categories.isEmpty()) {
             for (User p : psychologists
