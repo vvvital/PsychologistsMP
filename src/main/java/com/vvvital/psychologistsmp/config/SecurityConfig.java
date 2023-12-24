@@ -31,7 +31,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(basic -> basic.init(http))
+                .logout(logout->logout.logoutUrl("/auth/logout"))
                 .authorizeHttpRequests(request->request
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/users/save").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/psychologist/all","/api/psychologist/get/**"
                         ,"/api/users/locations","/api/users/categories").permitAll()
