@@ -9,7 +9,6 @@ import net.bytebuddy.utility.RandomString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,7 +39,7 @@ public class DataBucketUtil {
             LOGGER.debug("Start file uploading process on GCS");
             byte[] fileData = multipartFile.getBytes();
 
-            InputStream inputStream = new ClassPathResource(gcpConfigFile).getInputStream();
+            InputStream inputStream = new FileInputStream(gcpConfigFile);
 
             StorageOptions options = StorageOptions.newBuilder().setProjectId(gcpProjectId)
                     .setCredentials(GoogleCredentials.fromStream(inputStream)).build();
