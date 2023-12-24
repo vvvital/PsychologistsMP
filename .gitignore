@@ -19,6 +19,8 @@ target/
 *.iml
 *.ipr
 
+src/main/resources/gcp-account-file.json
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
