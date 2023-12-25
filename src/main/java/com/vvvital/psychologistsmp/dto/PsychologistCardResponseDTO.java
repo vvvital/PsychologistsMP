@@ -20,8 +20,8 @@ public class PsychologistCardResponseDTO {
     private String specialization;
     private Set<Categories> categories;
 
-    public Set<Categories>getCategories(){
-        return categories;
+    public Set<String>getCategories(){
+        return categories.stream().map(Categories::toString).collect(Collectors.toSet());
     }
 
     public Integer getPrice() {
