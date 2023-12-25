@@ -24,19 +24,16 @@ public class PsychologistCard {
     private String specialization;
     @Column
     private String description;
-    @Column
-    private String photoLink;
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Categories> categories;
 
-    public PsychologistCard(Integer price, Integer rating, Integer experience, String specialization, String description, String photoLink,Set<Categories> categories) {
+    public PsychologistCard(Integer price, Integer rating, Integer experience, String specialization, String description,Set<Categories> categories) {
         this.price = price;
         this.rating = rating;
         this.experience = experience;
         this.specialization = specialization;
         this.description = description;
-        this.photoLink = photoLink;
         this.categories = categories;
     }
 
@@ -74,10 +71,6 @@ public class PsychologistCard {
         return specialization;
     }
 
-    public String getPhotoLink() {
-        return photoLink;
-    }
-
     public Set<Categories> getCategories() {
         return categories;
     }
@@ -102,10 +95,6 @@ public class PsychologistCard {
         this.description = description;
     }
 
-    public void setPhotoLink(String photoLink) {
-        this.photoLink = photoLink;
-    }
-
     public void setCategories(Set<Categories> categories) {
         this.categories = categories;
     }
@@ -122,7 +111,6 @@ public class PsychologistCard {
                 ", rating=" + rating +
                 ", experience=" + experience +
                 ", description='" + description + '\'' +
-                ", photoLink='" + photoLink + '\'' +
                 ", categories " + categories.toString() +
                 '}';
     }

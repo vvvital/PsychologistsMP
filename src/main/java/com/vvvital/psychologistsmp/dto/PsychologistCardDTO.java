@@ -18,7 +18,6 @@ public class PsychologistCardDTO {
     private Integer experience;
     private String description;
     private String specialization;
-    private String photoLink;
     private Set<Categories> categories;
 
     public static PsychologistCard toModel(PsychologistCardDTO dto) {
@@ -28,7 +27,6 @@ public class PsychologistCardDTO {
         card.setExperience(dto.getExperience());
         card.setDescription(dto.getDescription());
         card.setSpecialization(dto.getSpecialization());
-        card.setPhotoLink(dto.getPhotoLink());
         card.setCategories(dto.getCategories());
         return card;
     }
@@ -40,7 +38,6 @@ public class PsychologistCardDTO {
         dto.setExperience(model.getExperience());
         dto.setDescription(model.getDescription());
         dto.setSpecialization(model.getSpecialization());
-        dto.setPhotoLink(model.getPhotoLink());
         dto.setCategories(model.getCategories());
         return dto;
     }
@@ -66,9 +63,6 @@ public class PsychologistCardDTO {
         return description;
     }
 
-    public String getPhotoLink() {
-        return photoLink;
-    }
 
     public Set<Categories> getCategories() {
 
@@ -93,10 +87,6 @@ public class PsychologistCardDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setPhotoLink(String photoLink) {
-        this.photoLink = photoLink;
     }
 
     public void setSpecialization(String specialization) {

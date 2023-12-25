@@ -14,7 +14,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "id_seq")
     @Column
     private Long id;
-
     @NotBlank
     private String email;
     private String password;
@@ -22,6 +21,7 @@ public class User {
     private String firstName;
     @Column
     private String lastName;
+    private String photoLink;
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -106,6 +106,14 @@ public class User {
     }
 
     public void setCard(PsychologistCard card){this.card=card;}
+
+    public String getPhotoLink() {
+        return photoLink;
+    }
+
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
+    }
 
     @Override
     public String toString() {

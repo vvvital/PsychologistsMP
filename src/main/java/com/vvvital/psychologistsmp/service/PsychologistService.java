@@ -115,7 +115,6 @@ public class PsychologistService {
             existingPsychologistCard.setExperience(cardDTO.getExperience());
             existingPsychologistCard.setSpecialization(cardDTO.getSpecialization());
             existingPsychologistCard.setDescription(cardDTO.getDescription());
-            existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
             existingPsychologistCard.setCategories(cardDTO.getCategories());
 
             return PsychologistCardDTO.toDTO(cardRepository.save(existingPsychologistCard));
@@ -144,41 +143,11 @@ public class PsychologistService {
             if (cardDTO.getDescription() != null) {
                 existingPsychologistCard.setDescription(cardDTO.getDescription());
             }
-            if (cardDTO.getPhotoLink() != null) {
-                existingPsychologistCard.setPhotoLink(cardDTO.getPhotoLink());
-            }
             if (cardDTO.getCategories() != null) {
                 existingPsychologistCard.setCategories(cardDTO.getCategories());
             }
 
             return PsychologistCardDTO.toDTO(cardRepository.save(existingPsychologistCard));
-        }
-    }
-
-    public void uploadProfileImage(Long id, MultipartFile file) {
-        PsychologistCard psychologistCard = cardRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Card not found with id: " + id));
-
-        logger.debug("Start file uploading service");
-
-        String originalFileName = file.getOriginalFilename();
-        if (originalFileName == null) {
-            throw new BadRequestException("Original file name is null");
-        }
-        Path path = new File(originalFileName).toPath();
-
-        try {
-            String contentType = Files.probeContentType(path);
-            String fileUrl = dataBucketUtil.uploadFile(file, originalFileName, contentType);
-
-            psychologistCard.setPhotoLink(fileUrl);
-            cardRepository.save(psychologistCard);
-
-            logger.debug("File uploaded successfully, url: {}", fileUrl);
-
-        } catch (Exception e) {
-            logger.error("Error occurred while uploading. Error: ", e);
-            throw new GCPFileUploadException("Error occurred while uploading");
         }
     }
 

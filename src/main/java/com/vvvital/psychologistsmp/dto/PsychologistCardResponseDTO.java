@@ -18,7 +18,6 @@ public class PsychologistCardResponseDTO {
     private Integer experience;
     private String description;
     private String specialization;
-    private String photoLink;
     private Set<Categories> categories;
 
     public Set<Categories>getCategories(){
@@ -45,10 +44,6 @@ public class PsychologistCardResponseDTO {
         return specialization;
     }
 
-    public String getPhotoLink() {
-        return photoLink;
-    }
-
     public void setPrice(Integer price) {
         this.price = price;
     }
@@ -69,10 +64,6 @@ public class PsychologistCardResponseDTO {
         this.specialization = specialization;
     }
 
-    public void setPhotoLink(String photoLink) {
-        this.photoLink = photoLink;
-    }
-
     public void setCategories(Set<Categories> categories) {
         this.categories = categories;
     }
@@ -84,7 +75,6 @@ public class PsychologistCardResponseDTO {
         dto.setExperience(card.getExperience());
         dto.setDescription(card.getDescription());
         dto.setSpecialization(card.getSpecialization());
-        dto.setPhotoLink(card.getPhotoLink());
         dto.setCategories(card.getCategories());
 
         return dto;
