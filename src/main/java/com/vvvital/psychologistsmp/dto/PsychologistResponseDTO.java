@@ -11,6 +11,7 @@ public class PsychologistResponseDTO {
     private String email;
     private String firstName;
     private String lastName;
+    private String photoLink;
     private Set<Role> roles;
     private Location location;
     private PsychologistCard card;
@@ -20,6 +21,7 @@ public class PsychologistResponseDTO {
         dto.setEmail(psychologist.getEmail());
         dto.setFirstName(psychologist.getFirstName());
         dto.setLastName(psychologist.getLastName());
+        dto.setPhotoLink(psychologist.getPhotoLink());
         dto.setLocation(psychologist.getLocation());
         dto.setRole(psychologist.getRoles());
         dto.setCard(psychologist.getCard());
@@ -40,6 +42,10 @@ public class PsychologistResponseDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
     }
 
     public void setRole(Set<Role> roles) {
@@ -68,6 +74,10 @@ public class PsychologistResponseDTO {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getPhotoLink() {
+        return photoLink;
     }
 
     public Set<Role> getRole() {

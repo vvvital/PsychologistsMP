@@ -15,6 +15,7 @@ public class UserResponseDTO {
     private String email;
     private String firstName;
     private String lastName;
+    private String photoLink;
     private Set<Role>roles;
     private Location location;
 
@@ -48,6 +49,14 @@ public class UserResponseDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhotoLink() {
+        return photoLink;
+    }
+
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
     }
 
     public Set<Role> getRole() {

@@ -106,19 +106,5 @@ public class PsychologistController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-    @PostMapping("/{cartId}/profileImage")
-    public ResponseEntity<String> uploadProfileImage(@PathVariable Long cartId,
-                                                     @RequestParam("file") MultipartFile file) {
-        try {
-            psychologistService.uploadProfileImage(cartId, file);
-            return ResponseEntity.ok("Profile image uploaded successfully");
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload profile image: " + e.getMessage());
-        }
-    }
 }
 

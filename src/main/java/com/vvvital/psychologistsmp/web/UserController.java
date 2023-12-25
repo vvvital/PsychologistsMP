@@ -9,14 +9,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.Utilities;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -104,6 +107,19 @@ public class UserController {
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping("/{userId}/profileImage")
+    public ResponseEntity<String> uploadProfileImage(@PathVariable Long userId,
+                                                     @RequestParam("file") MultipartFile file) {
+        try {
+            userService.uploadProfileImage(userId, file);
+            return ResponseEntity.ok("Profile image uploaded successfully");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to upload profile image: " + e.getMessage());
         }
     }
 
