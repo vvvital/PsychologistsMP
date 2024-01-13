@@ -2,14 +2,12 @@ package com.vvvital.psychologistsmp.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
-import org.hibernate.validator.constraints.Email;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "id_seq")
     @Column
