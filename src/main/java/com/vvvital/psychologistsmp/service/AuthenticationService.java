@@ -34,27 +34,20 @@ public class AuthenticationService {
 
     public JwtAuthenticationResponse signUp(UserRequestDTO request) {
         User user=dtoMapper.requestDTOToUser(request);
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
-        System.out.println("user save "+ user.getEmail());
         UserDetails userDetails = securityUserService.loadUserByUsername(user.getEmail());
-        System.out.println("userDetails load user "+userDetails);
         String jwt = jwtService.generateToken(userDetails);
-        System.out.println("token=" +jwt);
         return new JwtAuthenticationResponse(jwt);
     }
 
     public JwtAuthenticationResponse signIn(LoginRequest request) {
-        System.out.println("authenticationManager" + request.getEmail()+request.getPassword());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
                 request.getPassword()
         ));
 
         UserDetails user = securityUserService.loadUserByUsername(request.getEmail());
-        System.out.println("userdetails "+ user.getUsername());
         String jwt = jwtService.generateToken(user);
-        System.out.println("generate token" + jwt);
         return new JwtAuthenticationResponse(jwt);
     }
 
