@@ -13,16 +13,22 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final SecurityUserService securityUserService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
 
     @Autowired
-    public SecurityConfig(SecurityUserService securityUserService) {
+    public SecurityConfig(SecurityUserService securityUserService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.securityUserService = securityUserService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
@@ -30,8 +36,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .httpBasic(basic -> basic.init(http))
+                //.httpBasic(basic -> basic.init(http))
                 .logout(logout->logout.logoutUrl("/auth/logout"))
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(daoAuthenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request->request
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/users/save").permitAll()
@@ -43,9 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/auth/**",
                                 "/v3/api-docs/**", "/v3/api-docs.yaml",
                                 "/swagger-ui/**","/swagger-ui.html").permitAll()
-                        .anyRequest().authenticated()
-
-                );
+                        .anyRequest().authenticated());
 
         return http.build();
     }

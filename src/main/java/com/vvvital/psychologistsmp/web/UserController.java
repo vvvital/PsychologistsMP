@@ -1,26 +1,26 @@
 package com.vvvital.psychologistsmp.web;
 
-import com.vvvital.psychologistsmp.dto.*;
-import com.vvvital.psychologistsmp.model.*;
+import com.vvvital.psychologistsmp.dto.UserDTOMapper;
+import com.vvvital.psychologistsmp.dto.UserRequestDTO;
+import com.vvvital.psychologistsmp.dto.UserResponseDTO;
+import com.vvvital.psychologistsmp.model.Categories;
+import com.vvvital.psychologistsmp.model.Location;
+import com.vvvital.psychologistsmp.model.User;
 import com.vvvital.psychologistsmp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.Utilities;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -135,5 +135,6 @@ public class UserController {
     public List<Categories> getCategories(){
         return Arrays.stream(Categories.values()).sorted().collect(Collectors.toList());
     }
+
 }
 
