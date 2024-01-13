@@ -4,13 +4,11 @@ import com.vvvital.psychologistsmp.dto.JwtAuthenticationResponse;
 import com.vvvital.psychologistsmp.dto.LoginRequest;
 import com.vvvital.psychologistsmp.dto.UserRequestDTO;
 import com.vvvital.psychologistsmp.service.AuthenticationService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
 public class AuthController {
 
     private final AuthenticationService authenticationService;
