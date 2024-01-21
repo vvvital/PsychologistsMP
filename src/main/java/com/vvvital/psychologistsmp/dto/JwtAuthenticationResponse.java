@@ -1,14 +1,22 @@
 package com.vvvital.psychologistsmp.dto;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class JwtAuthenticationResponse {
-    public JwtAuthenticationResponse(String token) {
+    public JwtAuthenticationResponse(String token, UserResponseDTO user) {
         this.token = token;
+        this.user=user;
     }
 
     private String token;
+
+    private UserResponseDTO user;
+
+    public UserResponseDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserResponseDTO user) {
+        this.user = user;
+    }
 
     public String getToken() {
         return token;
