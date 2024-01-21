@@ -33,11 +33,15 @@ public class AuthenticationService {
     }
 
     public JwtAuthenticationResponse signUp(UserRequestDTO request) {
-        User user=dtoMapper.requestDTOToUser(request);
-        userService.save(user);
-        UserDetails userDetails = securityUserService.loadUserByUsername(user.getEmail());
-        String jwt = jwtService.generateToken(userDetails);
-        return new JwtAuthenticationResponse(jwt);
+        if (userService.findByEmail(request.getEmail())==null) {
+            User user = userService.save(dtoMapper.requestDTOToUser(request));
+            UserDetails userDetails = securityUserService.loadUserByUsername(user.getEmail());
+            String jwt = jwtService.generateToken(userDetails);
+            return new JwtAuthenticationResponse(jwt, dtoMapper.userToUserResponseDTO(user));
+        }
+        else {
+            throw new IllegalStateException(String.format("User %s is already exist",request.getEmail()));
+        }
     }
 
     public JwtAuthenticationResponse signIn(LoginRequest request) {
@@ -46,9 +50,10 @@ public class AuthenticationService {
                 request.getPassword()
         ));
 
-        UserDetails user = securityUserService.loadUserByUsername(request.getEmail());
-        String jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        UserDetails userDetails = securityUserService.loadUserByUsername(request.getEmail());
+        String jwt = jwtService.generateToken(userDetails);
+        User user = userService.findByEmail(userDetails.getUsername());
+        return new JwtAuthenticationResponse(jwt, dtoMapper.userToUserResponseDTO(user));
     }
 
 }
