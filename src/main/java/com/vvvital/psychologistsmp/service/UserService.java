@@ -38,7 +38,6 @@ public class UserService {
         this.dataBucketUtil = dataBucketUtil;
     }
 
-
     public User save(User user) {
         System.out.println("User service.save " + user.getRoles());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -67,17 +66,13 @@ public class UserService {
         }
     }
 
-
-    public User updateGeneralInformation(String email, UserRequestDTO userRequestDTO, Principal principal) throws Exception {
+    public User updateGeneralInformation(String email, UpdateUserDTO updateUserDTO, Principal principal) throws Exception {
         if (principal.getName().equals(email)) {
             User existingGeneralInformation = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
 
-            existingGeneralInformation.setEmail(userRequestDTO.getEmail());
-            existingGeneralInformation.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
-            existingGeneralInformation.setFirstName(userRequestDTO.getFirstName());
-            existingGeneralInformation.setLastName(userRequestDTO.getLastName());
-            existingGeneralInformation.setRoles(userRequestDTO.getRoles());
-            existingGeneralInformation.setLocation(userRequestDTO.getLocation());
+            existingGeneralInformation.setFirstName(updateUserDTO.getFirstName());
+            existingGeneralInformation.setLastName(updateUserDTO.getLastName());
+            existingGeneralInformation.setLocation(updateUserDTO.getLocation());
 
             return userRepository.save(existingGeneralInformation);
         } else {
@@ -85,27 +80,20 @@ public class UserService {
         }
     }
 
-    public User patchGeneralInformation(String email, UserRequestDTO userRequestDTO, Principal principal) throws Exception {
+    public User patchGeneralInformation(String email, UpdateUserDTO updateUserDTO, Principal principal) throws Exception {
         if (principal.getName().equals(email)) {
             User existingGeneralInformation = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
 
-            if (userRequestDTO.getEmail() != null) {
-                existingGeneralInformation.setEmail(userRequestDTO.getEmail());
+
+            if (updateUserDTO.getFirstName() != null) {
+                existingGeneralInformation.setFirstName(updateUserDTO.getFirstName());
             }
-            if (userRequestDTO.getPassword() != null) {
-                existingGeneralInformation.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+            if (updateUserDTO.getLastName() != null) {
+                existingGeneralInformation.setLastName(updateUserDTO.getLastName());
             }
-            if (userRequestDTO.getFirstName() != null) {
-                existingGeneralInformation.setFirstName(userRequestDTO.getFirstName());
-            }
-            if (userRequestDTO.getLastName() != null) {
-                existingGeneralInformation.setLastName(userRequestDTO.getLastName());
-            }
-            if (userRequestDTO.getRoles() != null) {
-                existingGeneralInformation.setRoles(userRequestDTO.getRoles());
-            }
-            if (userRequestDTO.getLocation() != null) {
-                existingGeneralInformation.setLocation(userRequestDTO.getLocation());
+
+            if (updateUserDTO.getLocation() != null) {
+                existingGeneralInformation.setLocation(updateUserDTO.getLocation());
             }
 
             return userRepository.save(existingGeneralInformation);
@@ -113,6 +101,7 @@ public class UserService {
             throw new IllegalStateException(" Violation of access rights");
         }
     }
+
     public void uploadProfileImage(Long id, MultipartFile file) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Card not found with id: " + id));

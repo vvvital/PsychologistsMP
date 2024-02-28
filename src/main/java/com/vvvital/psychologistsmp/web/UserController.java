@@ -1,5 +1,6 @@
 package com.vvvital.psychologistsmp.web;
 
+import com.vvvital.psychologistsmp.dto.UpdateUserDTO;
 import com.vvvital.psychologistsmp.dto.UserDTOMapper;
 import com.vvvital.psychologistsmp.dto.UserRequestDTO;
 import com.vvvital.psychologistsmp.dto.UserResponseDTO;
@@ -87,9 +88,9 @@ public class UserController {
     @PutMapping("/{email}/general-information")
     @Operation(summary = "Update general information",
             description = "Update ALL variables a general user information by specifying it's id user. The response is user with id, email, first name, last name, location and role.")
-    public ResponseEntity<?> updateGeneralInformation(@Parameter(description = "User's email") @PathVariable String email, @RequestBody UserRequestDTO userRequestDTO, Principal principal) {
+    public ResponseEntity<?> updateGeneralInformation(@Parameter(description = "User's email") @PathVariable String email, @RequestBody UpdateUserDTO updateUserDTO, Principal principal) {
         try {
-            User updatedUser = userService.updateGeneralInformation(email, userRequestDTO, principal);
+            User updatedUser = userService.updateGeneralInformation(email, updateUserDTO, principal);
             UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(updatedUser);
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
@@ -100,9 +101,9 @@ public class UserController {
     @PatchMapping("/{email}/general-information")
     @Operation(summary = "Update general information",
             description = "Update SOME variables a general user information by specifying it's id user. The response is user with id, email, first name, last name, location and role.")
-    public ResponseEntity<?> patchGeneralInformation(@Parameter(description = "User's email") @PathVariable String email, @RequestBody UserRequestDTO userRequestDTO, Principal principal) {
+    public ResponseEntity<?> patchGeneralInformation(@Parameter(description = "User's email") @PathVariable String email, @RequestBody UpdateUserDTO updateUserDTO, Principal principal) {
         try {
-            User patchedUser = userService.patchGeneralInformation(email, userRequestDTO, principal);
+            User patchedUser = userService.patchGeneralInformation(email, updateUserDTO, principal);
             UserResponseDTO responseDTO = userDTOMapper.userToUserResponseDTO(patchedUser);
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
